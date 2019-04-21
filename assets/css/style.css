@@ -39,13 +39,16 @@
   padding: 0;
 }
 
+header, main, footer {
+    width: 100%;
+}
+
 .head-cont {
     display: flex;
-    width: 1400px;
+    max-width: 1400px;
     flex-wrap: wrap;
     margin: 85px auto;
     justify-content: space-between;
-
 }
 
 .logo {
@@ -131,7 +134,7 @@
     display: flex;
     list-style: none;
     align-items: center;
-    width: 79%;
+    width: 80%;
     justify-content: space-between;
     margin: -13px -60px 0 0;
 }
@@ -174,7 +177,6 @@ a.botton-figure-sign {
     position: relative;
     background: url(../img/background.jpg);
     background-repeat: no-repeat;
-    /*background-position: center center;*/
     background-position-x: 54%;
     background-position-y: 132%;
     background-size: inherit;
@@ -184,7 +186,7 @@ a.botton-figure-sign {
 .main-cont {
     display: flex;
     flex-direction: column;
-    width: 1400px;
+    max-width: 1400px;
     margin: 0 auto;
     justify-content: space-between;
     align-items: center;
@@ -278,3 +280,87 @@ a.botton-figure-create {
     opacity: 0.82;
 }
 
+
+@media only screen and (max-width: 1400px) {
+    .head-cont {
+        max-width: 1200px;
+    }
+    .main-cont {
+        max-width: 1200px;   
+    } 
+}
+
+
+@media only screen and (max-width: 1200px) {
+    .head-cont {
+        max-width: 800px;
+    }
+    .main-cont {
+        max-width: 800px;   
+    }
+    .logo {
+        order: 1;
+        justify-content: flex-start; 
+   } 
+
+   .lan {
+        order: 3;
+        justify-content: flex-start;
+    }
+
+   .navi-menu {
+        order: 2; 
+        margin: 0 75px 0 0;
+    }
+
+   .sign-menu {
+        order: 4;
+        width: 26%;
+        margin: 10px 59px 0 0;
+        justify-content: flex-end;   
+   }
+   
+   .soc-net {
+        top: -32px;
+    }  
+}
+
+
+@media only screen and (max-width: 800px) {
+    .head-cont {
+        max-width: 600px;
+    }
+    .main-cont {
+        max-width: 600px;   
+    }
+
+    .sign-menu {
+        width: 36%;   
+   } 
+
+   .navi-menu {
+         visibility: hidden; 
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+    .head-cont {
+        max-width: 300px;
+    }
+    .main-cont {
+        max-width: 300px;   
+    }
+
+    .sign {
+        flex-direction: column;
+    }
+
+   .lan {
+        visibility: hidden;
+    }
+
+    .soc-net {
+        top: -211px;
+    }
+}
