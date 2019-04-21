@@ -1,0 +1,280 @@
+@font-face {
+    font-family: 'titillium bold';
+    src: url('../fonts/titillium/titilliumweb-bold-webfont.eot');
+    src: url('../fonts/titillium/titilliumweb-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/titillium/titilliumweb-bold-webfont.woff2') format('woff2'),
+         url('../fonts/titillium/titilliumweb-bold-webfont.woff') format('woff'),
+         url('../fonts/titillium/titilliumweb-bold-webfont.ttf') format('truetype'),
+         url('../fonts/titillium/titilliumweb-bold-webfont.svg#titillium_webbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'titillium';
+    src: url('../fonts/titillium/titilliumweb-regular-webfont.eot');
+    src: url('../fonts/titillium/titilliumweb-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/titillium/titilliumweb-regular-webfont.woff2') format('woff2'),
+         url('../fonts/titillium/titilliumweb-regular-webfont.woff') format('woff'),
+         url('../fonts/titillium/titilliumweb-regular-webfont.ttf') format('truetype'),
+         url('../fonts/titillium/titilliumweb-regular-webfont.svg#titillium_webregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'titillium semibold';
+    src: url('../fonts/titillium/titilliumweb-semibold-webfont.eot');
+    src: url('../fonts/titillium/titilliumweb-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/titillium/titilliumweb-semibold-webfont.woff2') format('woff2'),
+         url('../fonts/titillium/titilliumweb-semibold-webfont.woff') format('woff'),
+         url('../fonts/titillium/titilliumweb-semibold-webfont.ttf') format('truetype'),
+         url('../fonts/titillium/titilliumweb-semibold-webfont.svg#titillium_web_semiboldregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.head-cont {
+    display: flex;
+    width: 1400px;
+    flex-wrap: wrap;
+    margin: 85px auto;
+    justify-content: space-between;
+
+}
+
+.logo {
+    display: flex;
+    width: 30%;
+    justify-content: flex-start;
+    order: 1;
+}
+
+.logo > img {
+    width: 157px;
+    height: 22px;
+}
+
+.lan {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    margin: 14px 0 0 2px;
+    width: 17%;
+    order: 4;  
+}
+
+.lan li:not(:first-child)::before {
+    content: '/';
+    margin: 1px 10px 0 0;
+}
+
+.lan li {
+    display: flex;
+}
+
+.lan a {
+    color: #959595;
+    font-family: "titillium";
+    font-size: 14px;
+    letter-spacing: 0.14px;
+    text-decoration: none;  
+}
+
+.lan a:hover {
+    font-family: 'titillium bold';
+    text-decoration: underline;
+    font-weight: 700;
+    color: #959595;
+    margin: -1px 0 0 0; 
+}
+
+.navi-menu {
+    display: flex;
+    justify-content: space-around;
+    width: 53%;
+    order: 2;
+}
+
+.about {
+    display: flex;
+    list-style: none;
+    width: 59%;
+    justify-content: space-around;
+    margin: 0 -296px 0 0;
+}
+
+.about a {
+    color: #454545;
+    font-family: "titillium";
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.about a:hover {
+    color: red;
+} 
+
+.sign-menu {
+    display: flex;
+    justify-content: space-around;
+    width: 17%;
+    order: 3;  
+}
+
+.sign {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    width: 79%;
+    justify-content: space-between;
+    margin: -13px -60px 0 0;
+}
+
+.sign a {
+    color: #454545;
+    font-family: "titillium bold";
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.sign li:first-child a::before {
+    content: '\f2f6';
+    font-weight: 600;
+    font-family: 'Font Awesome 5 Free';
+    margin: 0 9px 0 0px;
+}
+
+.sign a:hover {
+    color: red;
+}
+
+
+a.botton-figure-sign {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 94px;
+    height: 40px;
+    text-align: center;
+    color: white;
+    border-radius: 22px;
+    background: rgb(88,44,126);
+    background: linear-gradient(135deg, rgba(88,44,126,1) 0%, rgba(88,46,128,1) 30%, rgba(98,117,203,1) 71%);
+    box-shadow: 0px 4px 13px 2px #9eacd4;
+    margin: 4px 1px 0 0;
+}
+
+.main-sect {
+    position: relative;
+    background: url(../img/background.jpg);
+    background-repeat: no-repeat;
+    /*background-position: center center;*/
+    background-position-x: 54%;
+    background-position-y: 132%;
+    background-size: inherit;
+    height: 600px;
+}
+
+.main-cont {
+    display: flex;
+    flex-direction: column;
+    width: 1400px;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-cont > h1 {
+    color: #454545;
+    font-family: "titillium semibold";
+    opacity: 0.84;
+    font-size: 60px;
+    font-weight: 400;
+    letter-spacing: 0.36px;
+    margin: 63px 0 0 0;
+}
+
+h2.based {
+    color: #464646;
+    font-family: "titillium";
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: 0.36px;
+}
+
+h2.based > span {
+    color: #fc2028;
+}
+
+.account {
+    display: flex;
+    width: 30%;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+    margin: 67px 0 0 0;
+}
+
+.account a {
+    text-decoration: none;
+}
+
+a.botton-figure-create {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 248px;
+    height: 56px;
+    text-align: center;
+    color: #ffffff;
+    font-family: "titillium";
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.18px;
+    border-radius: 26px;
+    background: rgb(100,108,146);
+    background: linear-gradient(135deg, rgba(100,108,146,1) 0%, rgba(88,46,128,1) 86%, rgba(95,47,105,1) 100%); 
+    margin: 2px 0 0 8px;
+}
+
+
+.botton-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 46px;
+    height: 46px;
+    background-color: #5f2966;
+    opacity: 0.8;
+    border-radius: 50%;
+}
+
+.botton-circle > i {
+    color: white;
+    font-size: 22px;
+}
+
+.soc-net {
+    display: flex;
+    flex-direction: column;
+    height: 17%;
+    justify-content: space-around;
+    position: absolute;
+    top: 85px;
+    right: 83px;
+    list-style: none;
+}
+
+.soc-net a {
+    text-decoration: none;
+    color: #454545;
+    font-size: 22px;
+    opacity: 0.82;
+}
+
