@@ -1,0 +1,145 @@
+header, .tools, .colors-history, .choose-color, .canvas, footer {
+    background-color: antiquewhite;
+ }
+ 
+ header > h1 {
+    text-align: center;
+ }
+ 
+ main {
+    display: flex;
+ }
+ 
+ aside {
+    width: 14%;
+ }
+ 
+ .tools {
+    display: flex;
+    height: 30%;
+    justify-content: center;
+    align-items: center;
+ }
+ 
+ .tools > ul {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-around;
+    align-items: flex-end;
+    list-style: none;
+ }
+ 
+ .tools > ul > li > button {
+    width: 94px;
+    background-color: cornsilk;
+ }
+ 
+ .palette {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 70%;
+ }
+ 
+ .colors-history {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    height: 35%;
+ }
+ 
+ .colors-history > div {
+   border: 1px solid;
+   width: 40px;
+   height: 40px;
+ }
+ 
+ .current-color::after {
+   content: 'Current';
+   display: block;
+   margin: 11px 0px 0 51px;
+ }
+ 
+ .prev-color::after {
+   content: 'Previous';
+   display: block;
+   margin: 10px 0 0 52px;
+ }
+ 
+ .choose-color {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 52%;
+ }
+ 
+ .choose-color > div {
+    width: 40px;
+    height: 40px;
+    border: 1px solid;
+ }
+ 
+ .choose-color > div:nth-child(1) {
+    background-color: red;
+ }
+ 
+ .choose-color > div:nth-child(2) {
+    background-color: orange;
+ }
+ 
+ .choose-color > div:nth-child(3) {
+    background-color: yellow;
+ }
+ 
+ .choose-color > div:nth-child(4) {
+    background-color: green;
+ }
+ 
+ .choose-color > div:nth-child(5) {
+    background-color: blue;
+ }
+ 
+ .choose-color > div:nth-child(6) {
+    background-color: indigo;
+ }
+ 
+ .choose-color > div:nth-child(7) {
+    background-color: violet;
+ }
+ 
+ .choose-color > div:nth-child(8) {
+    background-color: black;
+ }
+ 
+ .choose-color > div:nth-child(9) {
+    background-color: white; 
+ }
+ 
+ .container {
+    display: flex;
+    justify-content: flex-end;
+ }
+ 
+ .canvas {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 41%;
+    border: 1px solid;
+ }
+ 
+ .canvas > div {
+    width: 150px;
+    height: 150px;
+    background-color: #dddddd;
+    border: 1px solid;
+    margin: 4px 0px 4px 0px;
+ }
+ 
+ .circle {
+     border-radius: 50%;
+ }
