@@ -49,6 +49,10 @@ function canvasClick(e) {
             target.style.backgroundColor = currentColor;
         }
 
+        if (state == 4) {
+            target.classList.toggle('circle');
+        }
+
     }
 }
 
