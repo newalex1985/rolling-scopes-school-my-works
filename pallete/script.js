@@ -74,6 +74,61 @@ function chooseColorClick(e) {
     }
 }
 
+
+function canvasMosedown(e) {
+    
+    var elmnt = e.target;
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+    if (elmnt.hasAttribute('data-figure')) {
+        if (state == 3) {
+            var coords = getCoords(elmnt);
+            var shiftX = e.pageX - coords.left;
+            var shiftY = e.pageY - coords.top;
+            
+            elmnt.style.position = 'absolute';
+            elmnt.style.zIndex = 1000;
+
+            elmnt.style.left = e.pageX - shiftX + "px";
+            elmnt.style.top = e.pageY - shiftY + "px";
+
+            // get the mouse cursor position at startup:
+            pos3 = e.pageX;
+            pos4 = e.pageY;
+
+            elmnt.addEventListener('mouseup', closeDragElement);
+            // call a function whenever the cursor moves:
+            document.addEventListener('mousemove', elementDrag);
+        }
+    }
+
+    function elementDrag(e) {
+        // calculate the new cursor position:
+        pos1 = pos3 - e.pageX;
+        pos2 = pos4 - e.pageY;
+        pos3 = e.pageX;
+        pos4 = e.pageY;
+        // set the element's new position:
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+        //stop moving when mouse button is released:
+        elmnt.removeEventListener('mouseup', closeDragElement);
+        document.removeEventListener('mousemove', elementDrag);
+    }
+}
+
+function getCoords(elem) {
+    var box = elem.getBoundingClientRect();
+    return {
+      top: box.top + pageYOffset,
+      left: box.left + pageXOffset
+    };
+}
+
+
 init();
 
 var divTools = document.querySelector('.tools');
@@ -84,3 +139,5 @@ divChooseColor.addEventListener('click', chooseColorClick);
 
 var divCanvas = document.querySelector('.canvas');
 divCanvas.addEventListener('click', canvasClick);
+divCanvas.addEventListener('mousedown', canvasMosedown);
+divCanvas.addEventListener('dragstart', () => false);
