@@ -2,9 +2,39 @@ var state;
 var currentColor;
 var prevColor;
 
+init();
+
+var divTools = document.querySelector('.tools');
+divTools.addEventListener('click', toolsClick);
+
+var divChooseColor = document.querySelector('.choose-color');
+divChooseColor.addEventListener('click', chooseColorClick);
+
+var divCanvas = document.querySelector('.canvas');
+divCanvas.addEventListener('click', canvasClick);
+divCanvas.addEventListener('mousedown', canvasMosedown);
+divCanvas.addEventListener('dragstart', () => false);
+
+
+function styleButtons(num) {
+
+    for (var i = 1; i < 5; i++) {
+        var but = document.querySelector(`.tools > div:nth-child(${i}) > button`);
+        if (i == num) {
+            but.style.opacity = '1';
+            but.disabled = true;
+        } else {
+            but.style.opacity = '.4';
+            but.disabled = false;
+        }
+    }
+}
+
 function init() {
-    
+
     state = 1;
+    styleButtons(state);
+
     currentColor = "green";
     prevColor = "red";
 
@@ -18,24 +48,29 @@ function init() {
 }
 
 function toolsClick(e) {
-    
-    var tool = e.target.getAttribute('data-tool');
 
-    switch (tool) {
-        case 'paint-bucket':
-            state = 1;
-            break;
-        case 'choose-color':
-            state = 2;
-            break;
-        case 'move':
-            state = 3;
-            break;
-        case 'transform':
-            state = 4;
-            break;
-        default:
-            state = 1;
+    var target = e.target;
+
+    if (target.hasAttribute('data-tool')) {
+        var tool = target.getAttribute('data-tool');
+        switch (tool) {
+            case 'paint-bucket':
+                state = 1;
+                break;
+            case 'choose-color':
+                state = 2;
+                break;
+            case 'move':
+                state = 3;
+                break;
+            case 'transform':
+                state = 4;
+                break;
+            default:
+                state = 1;
+        }
+    
+        styleButtons(state);
     }
 }
 
@@ -59,7 +94,7 @@ function canvasClick(e) {
 function chooseColorClick(e) {
 
     target = e.target;
-    
+
     if (target.hasAttribute('data-color')) {
         if (state == 2) {
             prevColor = currentColor;
@@ -76,7 +111,7 @@ function chooseColorClick(e) {
 
 
 function canvasMosedown(e) {
-    
+
     var elmnt = e.target;
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
@@ -85,7 +120,7 @@ function canvasMosedown(e) {
             var coords = getCoords(elmnt);
             var shiftX = e.pageX - coords.left;
             var shiftY = e.pageY - coords.top;
-            
+
             elmnt.style.position = 'absolute';
             elmnt.style.zIndex = 1000;
 
@@ -123,21 +158,7 @@ function canvasMosedown(e) {
 function getCoords(elem) {
     var box = elem.getBoundingClientRect();
     return {
-      top: box.top + pageYOffset,
-      left: box.left + pageXOffset
+        top: box.top + pageYOffset,
+        left: box.left + pageXOffset
     };
 }
-
-
-init();
-
-var divTools = document.querySelector('.tools');
-divTools.addEventListener('click', toolsClick);
-
-var divChooseColor = document.querySelector('.choose-color');
-divChooseColor.addEventListener('click', chooseColorClick);
-
-var divCanvas = document.querySelector('.canvas');
-divCanvas.addEventListener('click', canvasClick);
-divCanvas.addEventListener('mousedown', canvasMosedown);
-divCanvas.addEventListener('dragstart', () => false);
