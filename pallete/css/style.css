@@ -11,7 +11,7 @@ header, .tools, .colors-history, .choose-color, .canvas, footer {
  }
  
  aside {
-    width: 14%;
+    width: 12%;
  }
  
  .tools {
@@ -138,27 +138,35 @@ header, .tools, .colors-history, .choose-color, .canvas, footer {
     background-color: white; 
  }
  
- .container {
-    display: flex;
-    justify-content: flex-end;
+ section {
+   width: 88%;
  }
  
- .canvas {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    width: 41%;
-    border: 1px solid;
- }
- 
- .canvas > div {
-    width: 150px;
-    height: 150px;
-    background-color: #dddddd;
-    border: 1px solid;
-    margin: 4px 0px 4px 0px;
- }
+.container {
+   display: flex;
+   justify-content: flex-end;
+}
+
+.canvas {
+   display: grid;
+   grid-template-columns: 1fr 1fr 1fr;
+   grid-template-rows: 1fr 1fr 1fr;
+   grid-column-gap: 16px;
+   grid-row-gap: 16px;
+   border: 1px solid;
+}
+
+.sceleton {
+   width: 151px;
+   height: 151px;
+}
+
+.sceleton > div {
+   background-color: #dddddd;
+   border: 1px solid;
+   width: 149px;
+   height: 149px;
+}
  
  .circle {
      border-radius: 50%;
