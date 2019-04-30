@@ -33,10 +33,10 @@ function styleButtons(num) {
 function init() {
 
     state = 1;
-    styleButtons(state);
-
     currentColor = "green";
     prevColor = "red";
+
+    styleButtons(state);
 
     var divCurrentColor = document.querySelector('.current-color');
     var divPrevColor = document.querySelector('.prev-color');
@@ -76,7 +76,7 @@ function toolsClick(e) {
 
 function canvasClick(e) {
 
-    target = e.target;
+    var target = e.target;
 
     if (target.hasAttribute('data-figure')) {
 
@@ -93,7 +93,7 @@ function canvasClick(e) {
 
 function chooseColorClick(e) {
 
-    target = e.target;
+    var target = e.target;
 
     if (target.hasAttribute('data-color')) {
         if (state == 2) {

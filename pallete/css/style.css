@@ -23,7 +23,8 @@ header, .tools, .colors-history, .choose-color, .canvas, footer {
 }
 
 .tools > div > button {
-   width: 94px;
+   width: 100px;
+   height: 21px;
    background-color: cornsilk;
 }
 
