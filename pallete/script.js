@@ -26,8 +26,8 @@ function CreateFigureObject(id, position, left, top, backgroundColor, circle) {
 }
 
 function fillFigureState(figureState) {
-    figureState.forEach(function(item, i, arr) {
-        arr[i] = new CreateFigureObject('','','','','','');
+    figureState.forEach(function (item, i, arr) {
+        arr[i] = new CreateFigureObject('', '', '', '', '', '');
     });
 }
 
@@ -35,8 +35,8 @@ function exit() {
     saveLS();
 }
 
-function saveLS(){
-    
+function saveLS() {
+
     var figureState = new Array(9);
     figureState.fill(0);
     fillFigureState(figureState);
@@ -44,10 +44,10 @@ function saveLS(){
     localStorage.setItem('state', state);
     localStorage.setItem('currentColor', currentColor);
     localStorage.setItem('prevColor', prevColor);
-    
+
     var localFigState = [].slice.call(document.querySelectorAll('.sceleton > div'));
-    
-    figureState.forEach(function(item, i, arr) {
+
+    figureState.forEach(function (item, i, arr) {
         item.id = localFigState[i].getAttribute('data-figure');
         item.position = localFigState[i].style.position;
         item.left = localFigState[i].style.left;
@@ -55,22 +55,22 @@ function saveLS(){
         item.backgroundColor = localFigState[i].style.backgroundColor;
         item.circle = localFigState[i].classList.contains('circle');
     });
-  
+
     var serialFigureState = JSON.stringify(figureState);
     localStorage.setItem("figureState", serialFigureState);
 
 }
 
-function loadLS(){
+function loadLS() {
     state = localStorage.getItem('state');
-    state = (state === null) ? 1 : state; 
+    state = (state === null) ? 1 : state;
     currentColor = localStorage.getItem('currentColor');
     currentColor = (currentColor === null) ? 'green' : currentColor;
     prevColor = localStorage.getItem('prevColor');
     prevColor = (prevColor === null) ? 'red' : prevColor;
 
     var serialFigureState = localStorage.getItem("figureState");
-    
+
     //- chek on null
     if (serialFigureState === null) {
         return;
@@ -79,16 +79,16 @@ function loadLS(){
     var figureState = JSON.parse(serialFigureState);
 
     var localFigState = document.querySelectorAll('.sceleton > div');
-    
+
     for (var i = 0; i < 9; i++) {
         //id - possibly for the future
         localFigState[i].style.position = figureState[i].position;
         localFigState[i].style.left = figureState[i].left;
         localFigState[i].style.top = figureState[i].top;
         localFigState[i].style.backgroundColor = figureState[i].backgroundColor;
-        
+
         if (figureState[i].circle) {
-            localFigState[i].classList.add('circle');    
+            localFigState[i].classList.add('circle');
         }
     }
 }
@@ -143,8 +143,37 @@ function toolsClick(e) {
             default:
                 state = 1;
         }
-    
+
         styleButtons(state);
+    }
+
+    if (target.hasAttribute('data-reset')) {
+        state = 1;
+        currentColor = 'green';
+        prevColor = 'red';
+        styleButtons(state);
+        var divCurrentColor = document.querySelector('.current-color');
+        var divPrevColor = document.querySelector('.prev-color');
+        divCurrentColor.style.backgroundColor = currentColor;
+        divCurrentColor.setAttribute('title', currentColor);
+        divPrevColor.style.backgroundColor = prevColor;
+        divPrevColor.setAttribute('title', prevColor);
+
+        var localFigState = document.querySelectorAll('.sceleton > div');
+
+        for (var i = 0; i < 9; i++) {
+            //id - possibly for the future
+            localFigState[i].style.position = 'static';
+            localFigState[i].style.backgroundColor = '#dddddd';
+
+            if (localFigState[i].classList.contains('circle')) {
+                localFigState[i].classList.remove('circle');
+            }
+
+            if (i == 6) {
+                localFigState[i].classList.add('circle');
+            }
+        }
     }
 }
 
