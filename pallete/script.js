@@ -71,14 +71,29 @@ function loadLS() {
 
     var serialFigureState = localStorage.getItem("figureState");
 
+    var localFigState = document.querySelectorAll('.sceleton > div');
+    
     //- chek on null
     if (serialFigureState === null) {
+        
+        for (var i = 0; i < 9; i++) {
+            //id - possibly for the future
+            localFigState[i].style.position = 'static';
+            localFigState[i].style.backgroundColor = '#dddddd';
+
+            if (localFigState[i].classList.contains('circle')) {
+                localFigState[i].classList.remove('circle');
+            }
+
+            if (i == 6) {
+                localFigState[i].classList.add('circle');
+            }
+        }
+
         return;
     }
 
     var figureState = JSON.parse(serialFigureState);
-
-    var localFigState = document.querySelectorAll('.sceleton > div');
 
     for (var i = 0; i < 9; i++) {
         //id - possibly for the future
