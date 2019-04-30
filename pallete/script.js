@@ -3,6 +3,7 @@ var currentColor;
 var prevColor;
 
 init();
+window.addEventListener('unload', exit);
 
 var divTools = document.querySelector('.tools');
 divTools.addEventListener('click', toolsClick);
@@ -15,6 +16,82 @@ divCanvas.addEventListener('click', canvasClick);
 divCanvas.addEventListener('mousedown', canvasMosedown);
 divCanvas.addEventListener('dragstart', () => false);
 
+function CreateFigureObject(id, position, left, top, backgroundColor, circle) {
+    this.id = id;
+    this.position = position;
+    this.left = left;
+    this.top = top;
+    this.backgroundColor = backgroundColor;
+    this.circle = circle;
+}
+
+function fillFigureState(figureState) {
+    figureState.forEach(function(item, i, arr) {
+        arr[i] = new CreateFigureObject('','','','','','');
+    });
+}
+
+function exit() {
+    saveLS();
+}
+
+function saveLS(){
+    
+    var figureState = new Array(9);
+    figureState.fill(0);
+    fillFigureState(figureState);
+
+    localStorage.setItem('state', state);
+    localStorage.setItem('currentColor', currentColor);
+    localStorage.setItem('prevColor', prevColor);
+    
+    var localFigState = [].slice.call(document.querySelectorAll('.sceleton > div'));
+    
+    figureState.forEach(function(item, i, arr) {
+        item.id = localFigState[i].getAttribute('data-figure');
+        item.position = localFigState[i].style.position;
+        item.left = localFigState[i].style.left;
+        item.top = localFigState[i].style.top;
+        item.backgroundColor = localFigState[i].style.backgroundColor;
+        item.circle = localFigState[i].classList.contains('circle');
+    });
+  
+    var serialFigureState = JSON.stringify(figureState);
+    localStorage.setItem("figureState", serialFigureState);
+
+}
+
+function loadLS(){
+    state = localStorage.getItem('state');
+    state = (state === null) ? 1 : state; 
+    currentColor = localStorage.getItem('currentColor');
+    currentColor = (currentColor === null) ? 'green' : currentColor;
+    prevColor = localStorage.getItem('prevColor');
+    prevColor = (prevColor === null) ? 'red' : prevColor;
+
+    var serialFigureState = localStorage.getItem("figureState");
+    
+    //- chek on null
+    if (serialFigureState === null) {
+        return;
+    }
+
+    var figureState = JSON.parse(serialFigureState);
+
+    var localFigState = document.querySelectorAll('.sceleton > div');
+    
+    for (var i = 0; i < 9; i++) {
+        //id - possibly for the future
+        localFigState[i].style.position = figureState[i].position;
+        localFigState[i].style.left = figureState[i].left;
+        localFigState[i].style.top = figureState[i].top;
+        localFigState[i].style.backgroundColor = figureState[i].backgroundColor;
+        
+        if (figureState[i].circle) {
+            localFigState[i].classList.add('circle');    
+        }
+    }
+}
 
 function styleButtons(num) {
 
@@ -32,10 +109,7 @@ function styleButtons(num) {
 
 function init() {
 
-    state = 1;
-    currentColor = "green";
-    prevColor = "red";
-
+    loadLS();
     styleButtons(state);
 
     var divCurrentColor = document.querySelector('.current-color');
