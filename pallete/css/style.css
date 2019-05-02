@@ -143,6 +143,19 @@ header, .tools, .colors-history, .choose-color, .canvas, footer {
     background-color: white; 
  }
  
+.tools, .colors-history, .choose-color {
+   opacity: .8;
+}
+
+.tools, .choose-color {
+   transition: all 400ms easy;
+}
+
+.tools:hover, .choose-color:hover {
+   transform: scale(1.03);
+   opacity: 1;
+}
+
  section {
    width: 88%;
  }

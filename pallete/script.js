@@ -16,7 +16,7 @@ divCanvas.addEventListener('click', canvasClick);
 divCanvas.addEventListener('mousedown', canvasMosedown);
 divCanvas.addEventListener('dragstart', () => false);
 
-function CreateFigureObject(id, position, left, top, backgroundColor, circle) {
+function CreateFigureObject(id = '', position = '', left = '', top = '', backgroundColor = '', circle = '') {
     this.id = id;
     this.position = position;
     this.left = left;
@@ -26,9 +26,10 @@ function CreateFigureObject(id, position, left, top, backgroundColor, circle) {
 }
 
 function fillFigureState(figureState) {
-    figureState.forEach(function (item, i, arr) {
-        arr[i] = new CreateFigureObject('', '', '', '', '', '');
-    });
+
+    for (var i = 0; i < 9; i++) {
+        figureState.push(new CreateFigureObject());
+    }
 }
 
 function exit() {
@@ -37,8 +38,7 @@ function exit() {
 
 function saveLS() {
 
-    var figureState = new Array(9);
-    figureState.fill(0);
+    var figureState = [];
     fillFigureState(figureState);
 
     localStorage.setItem('state', state);
@@ -48,7 +48,7 @@ function saveLS() {
     var localFigState = [].slice.call(document.querySelectorAll('.sceleton > div'));
 
     figureState.forEach(function (item, i, arr) {
-        item.id = localFigState[i].getAttribute('data-figure');
+        item.id = localFigState[i].dataset.figure;
         item.position = localFigState[i].style.position;
         item.left = localFigState[i].style.left;
         item.top = localFigState[i].style.top;
@@ -72,10 +72,10 @@ function loadLS() {
     var serialFigureState = localStorage.getItem("figureState");
 
     var localFigState = document.querySelectorAll('.sceleton > div');
-    
+
     //- chek on null
     if (serialFigureState === null) {
-        
+
         for (var i = 0; i < 9; i++) {
             //id - possibly for the future
             localFigState[i].style.position = 'static';
@@ -141,7 +141,7 @@ function toolsClick(e) {
     var target = e.target;
 
     if (target.hasAttribute('data-tool')) {
-        var tool = target.getAttribute('data-tool');
+        var tool = target.dataset.tool;
         switch (tool) {
             case 'paint-bucket':
                 state = 1;
@@ -216,7 +216,7 @@ function chooseColorClick(e) {
     if (target.hasAttribute('data-color')) {
         if (state == 2) {
             prevColor = currentColor;
-            currentColor = target.getAttribute('data-color');
+            currentColor = target.dataset.color;
             var divCurrentColor = document.querySelector('.current-color');
             var divPrevColor = document.querySelector('.prev-color');
             divCurrentColor.style.backgroundColor = currentColor;
@@ -231,7 +231,7 @@ function chooseColorClick(e) {
 function canvasMosedown(e) {
 
     var elmnt = e.target;
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    var movePositionX = 0, movePositionY = 0, startPositionX = 0, startPositionY = 0;
 
     if (elmnt.hasAttribute('data-figure')) {
         if (state == 3) {
@@ -246,8 +246,8 @@ function canvasMosedown(e) {
             elmnt.style.top = e.pageY - shiftY + "px";
 
             // get the mouse cursor position at startup:
-            pos3 = e.pageX;
-            pos4 = e.pageY;
+            startPositionX = e.pageX;
+            startPositionY = e.pageY;
 
             elmnt.addEventListener('mouseup', closeDragElement);
             // call a function whenever the cursor moves:
@@ -257,13 +257,13 @@ function canvasMosedown(e) {
 
     function elementDrag(e) {
         // calculate the new cursor position:
-        pos1 = pos3 - e.pageX;
-        pos2 = pos4 - e.pageY;
-        pos3 = e.pageX;
-        pos4 = e.pageY;
+        movePositionX = startPositionX - e.pageX;
+        movePositionY = startPositionY - e.pageY;
+        startPositionX = e.pageX;
+        startPositionY = e.pageY;
         // set the element's new position:
-        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        elmnt.style.top = (elmnt.offsetTop - movePositionY) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - movePositionX) + "px";
     }
 
     function closeDragElement() {
