@@ -1,6 +1,9 @@
-var state;
-var currentColor;
-var prevColor;
+var state = {
+    id: 1,
+    name: 'paint-bucket' 
+};
+var currentColor = 'green';
+var prevColor = 'red';
 
 init();
 window.addEventListener('unload', exit);
@@ -41,7 +44,9 @@ function saveLS() {
     var figureState = [];
     fillFigureState(figureState);
 
-    localStorage.setItem('state', state);
+    var serialState = JSON.stringify(state);
+    localStorage.setItem('state', serialState);
+
     localStorage.setItem('currentColor', currentColor);
     localStorage.setItem('prevColor', prevColor);
 
@@ -62,8 +67,10 @@ function saveLS() {
 }
 
 function loadLS() {
-    state = localStorage.getItem('state');
-    state = (state === null) ? 1 : state;
+    
+    var serialState = localStorage.getItem('state');
+
+    state = (serialState === null) ? state : JSON.parse(serialState);
     currentColor = localStorage.getItem('currentColor');
     currentColor = (currentColor === null) ? 'green' : currentColor;
     prevColor = localStorage.getItem('prevColor');
@@ -125,7 +132,7 @@ function styleButtons(num) {
 function init() {
 
     loadLS();
-    styleButtons(state);
+    styleButtons(state.id);
 
     var divCurrentColor = document.querySelector('.current-color');
     var divPrevColor = document.querySelector('.prev-color');
@@ -144,29 +151,34 @@ function toolsClick(e) {
         var tool = target.dataset.tool;
         switch (tool) {
             case 'paint-bucket':
-                state = 1;
+                state.id = 1;
+                state.name = tool;
                 break;
             case 'choose-color':
-                state = 2;
+                state.id = 2;
+                state.name = tool;
                 break;
             case 'move':
-                state = 3;
+                state.id = 3;
+                state.name = tool;
                 break;
             case 'transform':
-                state = 4;
+                state.id = 4;
+                state.name = tool;
                 break;
             default:
-                state = 1;
+                state.id = 1;
+                state.name = 'paint-bucket';
         }
 
-        styleButtons(state);
+        styleButtons(state.id);
     }
 
     if (target.hasAttribute('data-reset')) {
-        state = 1;
+        state.id = 1;
         currentColor = 'green';
         prevColor = 'red';
-        styleButtons(state);
+        styleButtons(state.id);
         var divCurrentColor = document.querySelector('.current-color');
         var divPrevColor = document.querySelector('.prev-color');
         divCurrentColor.style.backgroundColor = currentColor;
@@ -198,11 +210,11 @@ function canvasClick(e) {
 
     if (target.hasAttribute('data-figure')) {
 
-        if (state == 1) {
+        if (state.id == 1) {
             target.style.backgroundColor = currentColor;
         }
 
-        if (state == 4) {
+        if (state.id == 4) {
             target.classList.toggle('circle');
         }
 
@@ -214,7 +226,7 @@ function chooseColorClick(e) {
     var target = e.target;
 
     if (target.hasAttribute('data-color')) {
-        if (state == 2) {
+        if (state.id == 2) {
             prevColor = currentColor;
             currentColor = target.dataset.color;
             var divCurrentColor = document.querySelector('.current-color');
@@ -234,7 +246,7 @@ function canvasMosedown(e) {
     var movePositionX = 0, movePositionY = 0, startPositionX = 0, startPositionY = 0;
 
     if (elmnt.hasAttribute('data-figure')) {
-        if (state == 3) {
+        if (state.id == 3) {
             var coords = getCoords(elmnt);
             var shiftX = e.pageX - coords.left;
             var shiftY = e.pageY - coords.top;
