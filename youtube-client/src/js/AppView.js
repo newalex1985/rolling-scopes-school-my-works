@@ -8,8 +8,6 @@ class Carousel {
     this.width = 250;
     this.count = 4;
     this.carousel = document.createElement('div');
-    // this.buttonPrev = document.createElement('button');
-    // this.buttonNext = document.createElement('button');
     this.buttonPrev = document.createElement('div');
     this.buttonNext = document.createElement('div');
     this.gallery = document.createElement('div');
@@ -29,16 +27,48 @@ class Carousel {
     this.gallery.appendChild(this.clips);
     parent.appendChild(this.carousel);
     this.buttonPrev.addEventListener('click', () => {
-      this.position = Math.min(this.position + this.width * this.count, 0);
-      this.gallery.firstChild.style.marginLeft = `${this.position}px`;
+      this.moveRight(this.count);
     });
     this.buttonNext.addEventListener('click', () => {
-      // split: numItems, width, count -> cause: Eslint max lenght line requirement
-      const numItems = this.gallery.firstChild.children.length;
-      const { width, count } = this;
-      this.position = Math.max(this.position - width * count, -width * (numItems - count));
-      this.gallery.firstChild.style.marginLeft = `${this.position}px`;
+      this.moveLeft(this.count);
     });
+    this.gallery.addEventListener('mousedown', (eventMousedown) => {
+      const { target } = eventMousedown;
+      if (target.classList.contains('clip-card')) {
+        const targetCoords = Carousel.getCoords(target);
+        const targetCoordLeft = targetCoords.left;
+        const targetCoordRight = targetCoords.left + target.offsetWidth;
+        // think about if use addEventListener - > how to remove handler? ( if
+        // try use function name handler -> truoble with scope (targetCoordLeft, targetCoordRight),
+        // ok, if set listener like Class property function or static function -> same truoble
+        // with targetCoordLeft, targetCoordRight), must or transfer targetCoordLeft,
+        // targetCoordRight in listener like Class property function or static function (how?)
+        // or maybe use closures (how?). Don't want use property of class like this.targetCoordLeft,
+        // this.targetCoordRight
+        // so, let it be for now...
+        document.onmouseup = (eventMouseup) => {
+          document.onmouseup = null;
+          const currentCoordX = eventMouseup.pageX;
+          if (currentCoordX > targetCoordRight) {
+            this.moveRight(1);
+          } else if (currentCoordX < targetCoordLeft) {
+            this.moveLeft(1);
+          }
+        };
+      }
+    });
+  }
+
+  moveLeft(count) {
+    const numItems = this.gallery.firstChild.children.length;
+    // think about this limit right side of slider (will be continuous load of cards)
+    this.position = Math.max(this.position - this.width * count, -this.width * (numItems - count));
+    this.gallery.firstChild.style.marginLeft = `${this.position}px`;
+  }
+
+  moveRight(count) {
+    this.position = Math.min(this.position + this.width * count, 0);
+    this.gallery.firstChild.style.marginLeft = `${this.position}px`;
   }
 
   static createFontAwesome(elemParent, styleFont, font) {
@@ -46,6 +76,15 @@ class Carousel {
     elemFont.classList.add(styleFont);
     elemFont.classList.add(font);
     elemParent.appendChild(elemFont);
+  }
+
+  static getCoords(elem) {
+    const box = elem.getBoundingClientRect();
+
+    return {
+      top: box.top + window.pageYOffset,
+      left: box.left + window.pageXOffset,
+    };
   }
 }
 
