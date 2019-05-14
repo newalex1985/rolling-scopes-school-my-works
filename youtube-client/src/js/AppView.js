@@ -1,5 +1,48 @@
 import '../css/style.css';
 
+class Carousel {
+  constructor() {
+    this.position = 0;
+    this.width = 300;
+    this.count = 4;
+    this.carousel = document.createElement('div');
+    this.buttonPrev = document.createElement('button');
+    this.buttonNext = document.createElement('button');
+    this.gallery = document.createElement('div');
+    this.clips = document.createElement('ul');
+  }
+
+  init(parrent) {
+    this.carousel.classList.add('carousel');
+    this.buttonPrev.innerHTML = '<-';
+    this.buttonPrev.classList.add('arrow');
+    this.buttonPrev.classList.add('prev');
+    this.buttonNext.innerHTML = '->';
+    this.buttonNext.classList.add('arrow');
+    this.buttonNext.classList.add('next');
+    this.gallery.classList.add('gallery');
+    this.gallery.appendChild(this.clips);
+    // buttonPrev and buttonNext must move in other place (not gallery)
+    // work on styles
+    this.gallery.appendChild(this.buttonPrev);
+    this.gallery.appendChild(this.buttonNext);
+    this.carousel.appendChild(this.gallery);
+    parrent.appendChild(this.carousel);
+
+    this.buttonPrev.addEventListener('click', () => {
+      this.position = Math.min(this.position + this.width * this.count, 0);
+      this.gallery.firstChild.style.marginLeft = `${this.position}px`;
+    });
+    this.buttonNext.addEventListener('click', () => {
+      // split: numItems, width, count -> cause: Eslint max lenght line requirement
+      const numItems = this.gallery.firstChild.children.length;
+      const { width, count } = this;
+      this.position = Math.max(this.position - width * count, -width * (numItems - count));
+      this.gallery.firstChild.style.marginLeft = `${this.position}px`;
+    });
+  }
+}
+
 class ClipCard {
   constructor(clip) {
     this.clip = clip;
@@ -31,43 +74,10 @@ class AppView {
   }
 
   addShowInterface() {
-    // put in separate class
-    let position = 0;
-    const width = 130;
-    const count = 3;
-
-    // may be put this in fuction like makeContainer
     this.showBox.classList.add('show-box');
-    const carousel = document.createElement('div');
-    carousel.classList.add('carousel');
-    const buttonPrev = document.createElement('button');
-    buttonPrev.innerHTML = '<-';
-    buttonPrev.classList.add('arrow');
-    buttonPrev.classList.add('prev');
-    const buttonNext = document.createElement('button');
-    buttonNext.innerHTML = '->';
-    buttonNext.classList.add('arrow');
-    buttonNext.classList.add('next');
-    const gallery = document.createElement('div');
-    gallery.classList.add('gallery');
-    const clips = document.createElement('ul');
-    gallery.appendChild(clips);
-    gallery.appendChild(buttonPrev);
-    gallery.appendChild(buttonNext);
-    carousel.appendChild(gallery);
-    this.showBox.appendChild(carousel);
+    const carousel = new Carousel();
+    carousel.init(this.showBox);
     this.root.appendChild(this.showBox);
-
-    buttonPrev.onclick = function () {
-      position = Math.min(position + width * count, 0);
-      gallery.firstChild.style.marginLeft = `${position}px`;
-    };
-
-    buttonNext.onclick = function () {
-      const numItems = gallery.firstChild.children.length;
-      position = Math.max(position - width * count, -width * (numItems - count));
-      gallery.firstChild.style.marginLeft = `${position}px`;
-    };
   }
 
   render(clips) {
@@ -83,22 +93,6 @@ class AppView {
     });
     contentCurrent.parentElement.replaceChild(contentNew, contentCurrent);
   }
-
-  // render() {
-  //   // document.body - root
-  //   const content = document.createElement('ul');
-  //   content.innerHTML = this.clips.map(clip => `<li>${clip.title}</li>`).join('');
-  //   // must be root
-  //   const container = document.body.querySelector('ul');
-  //   if (container === null) {
-  //     document.body.appendChild(content);
-  //   } else {
-  //     // document.body.replaceChild(content, this.content);
-  //     document.body.replaceChild(content, container);
-  //   }
-
-  //   // this.content = content;
-  // }
 }
 
 export default AppView;

@@ -27,7 +27,6 @@ class App {
   }
 
   start() {
-    // const appView = new AppView();
     this.viewer = new AppView();
     this.viewer.addSearchInterface();
     this.addListeners(this.viewer);
@@ -37,6 +36,11 @@ class App {
   addListeners(appView) {
     appView.searchInput.addEventListener('change', (event) => {
       this.saveSearchString(event.target.value);
+    });
+    appView.searchInput.addEventListener('keyup', (event) => {
+      if (event.keyCode === 13) {
+        this.search();
+      }
     });
     appView.searchButton.addEventListener('click', () => {
       this.search();
