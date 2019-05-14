@@ -1,6 +1,11 @@
+body {
+  background-color: #5a4e4e;
+}
+
 .show-box {
-  display: flex;
+  display: none;
   justify-content: center;
+  margin: 10% auto;
 }
 
 .carousel {
@@ -33,15 +38,23 @@
   width: 230px;
   height: 300px;
   display: block;
-  margin: 0 10px;
-  border-radius: 10%;
+  margin: 10px 10px;
+  border-radius: 7%;
+  opacity: .8;
+  transition: all 400ms;
+}
+
+.clip-card:hover {
+  transform: scale(1.03);
+  opacity: 1;
+  cursor: pointer;
 }
 
 .arrow {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #818080;;
+  background-color: #393030;
   text-align: center;
   padding: 15px 0;
   color: wheat;
@@ -54,7 +67,7 @@
 }
 
 .arrow:hover {
-  background-color: gainsboro;
+  background-color: beige;
   cursor: pointer;
 }
 

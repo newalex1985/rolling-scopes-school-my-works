@@ -28,7 +28,6 @@ class Carousel {
     this.carousel.appendChild(this.buttonNext);
     this.gallery.appendChild(this.clips);
     parent.appendChild(this.carousel);
-
     this.buttonPrev.addEventListener('click', () => {
       this.position = Math.min(this.position + this.width * this.count, 0);
       this.gallery.firstChild.style.marginLeft = `${this.position}px`;
@@ -89,6 +88,7 @@ class AppView {
 
   render(clips) {
     console.log(clips);
+    this.showBox.style.display = 'flex';
     const contentNew = document.createElement('ul');
     const contentCurrent = this.showBox.querySelector('ul');
     clips.forEach((clip) => {
