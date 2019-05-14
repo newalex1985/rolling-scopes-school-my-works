@@ -1,33 +1,33 @@
 import '../css/style.css';
+import '@fortawesome/fontawesome-free/js/fontawesome';
+import '@fortawesome/fontawesome-free/js/solid';
 
 class Carousel {
   constructor() {
     this.position = 0;
-    this.width = 300;
+    this.width = 250;
     this.count = 4;
     this.carousel = document.createElement('div');
-    this.buttonPrev = document.createElement('button');
-    this.buttonNext = document.createElement('button');
+    // this.buttonPrev = document.createElement('button');
+    // this.buttonNext = document.createElement('button');
+    this.buttonPrev = document.createElement('div');
+    this.buttonNext = document.createElement('div');
     this.gallery = document.createElement('div');
     this.clips = document.createElement('ul');
   }
 
-  init(parrent) {
+  init(parent) {
     this.carousel.classList.add('carousel');
-    this.buttonPrev.innerHTML = '<-';
     this.buttonPrev.classList.add('arrow');
-    this.buttonPrev.classList.add('prev');
-    this.buttonNext.innerHTML = '->';
+    Carousel.createFontAwesome(this.buttonPrev, 'fas', 'fa-arrow-left');
     this.buttonNext.classList.add('arrow');
-    this.buttonNext.classList.add('next');
+    Carousel.createFontAwesome(this.buttonNext, 'fas', 'fa-arrow-right');
     this.gallery.classList.add('gallery');
-    this.gallery.appendChild(this.clips);
-    // buttonPrev and buttonNext must move in other place (not gallery)
-    // work on styles
-    this.gallery.appendChild(this.buttonPrev);
-    this.gallery.appendChild(this.buttonNext);
+    this.carousel.appendChild(this.buttonPrev);
     this.carousel.appendChild(this.gallery);
-    parrent.appendChild(this.carousel);
+    this.carousel.appendChild(this.buttonNext);
+    this.gallery.appendChild(this.clips);
+    parent.appendChild(this.carousel);
 
     this.buttonPrev.addEventListener('click', () => {
       this.position = Math.min(this.position + this.width * this.count, 0);
@@ -40,6 +40,13 @@ class Carousel {
       this.position = Math.max(this.position - width * count, -width * (numItems - count));
       this.gallery.firstChild.style.marginLeft = `${this.position}px`;
     });
+  }
+
+  static createFontAwesome(elemParent, styleFont, font) {
+    const elemFont = document.createElement('i');
+    elemFont.classList.add(styleFont);
+    elemFont.classList.add(font);
+    elemParent.appendChild(elemFont);
   }
 }
 

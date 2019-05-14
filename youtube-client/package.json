@@ -12,6 +12,7 @@
   "author": "Aliaksandr Konan",
   "license": "ISC",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.2",
     "lodash": "^4.17.11"
   },
   "devDependencies": {

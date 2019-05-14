@@ -48,13 +48,15 @@ class App {
   }
 
   saveSearchString(string) {
-    this.searchString = string;
+    this.searchString = string.trim();
   }
 
   async search() {
-    const model = new AppModel(this.state);
-    const clips = await model.getClips(this.searchString);
-    this.viewer.render(clips);
+    if (this.searchString !== '') {
+      const model = new AppModel(this.state);
+      const clips = await model.getClips(this.searchString);
+      this.viewer.render(clips);
+    }
   }
 }
 

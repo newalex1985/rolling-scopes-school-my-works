@@ -1,63 +1,23 @@
-/*
-.show-box {
-  background-color: gray;
-  border: 1px solid black;
-}
-
-.carousel {
-  position: relative;
-  width: 398px;
-  padding: 10px 40px;
-  border: 1px solid #CCC;
-  border-radius: 15px;
-  background: #eee;
-}
-
-.gallery {
-  width: 390px;
-  overflow: hidden;
-}
-
-.gallery ul {
-  height: 130px;
-  width: 9999px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  transition: margin-left 250ms;
-
-  font-size: 0;
-}
-
-.clip-card {
-  width: 130px;
-  height: 130px;
-  display: block;
-}
-
-*/
-
-
-/**/
-
 .show-box {
   display: flex;
   justify-content: center;
 }
 
 .carousel {
-  position: relative;
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 90%;
   padding: 10px 40px;
-  border: 1px solid #CCC;
+  /*border: 1px solid #CCC;
   border-radius: 15px;
   background: #eee;
+  */
 }
 
 .gallery {
   overflow: hidden;
+  width: 1000px;
 }
 
 .gallery ul {
@@ -70,23 +30,23 @@
 }
 
 .clip-card {
-  width: 250px;
+  width: 230px;
   height: 300px;
   display: block;
-  margin: 0 25px;
+  margin: 0 10px;
+  border-radius: 10%;
 }
 
 .arrow {
-  position: absolute;
-  top: 60px;
-  padding: 0;
-  background: #ddd;
-  border-radius: 15px;
-  border: 1px solid gray;
-  font-size: 24px;
-  line-height: 24px;
-  color: #444;
-  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #818080;;
+  text-align: center;
+  padding: 15px 0;
+  color: wheat;
+  margin: 20px;
+  box-sizing: border-box;
 }
 
 .arrow:focus {
@@ -94,22 +54,13 @@
 }
 
 .arrow:hover {
-  background: #ccc;
+  background-color: gainsboro;
   cursor: pointer;
-}
-
-.prev {
-  left: 7px;
-}
-
-.next {
-  right: 7px;
 }
 
 .gallery li {
   display: inline-block;
 }
-/**/
 
 
 
