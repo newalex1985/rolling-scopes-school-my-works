@@ -16,6 +16,20 @@ class AppModel {
     this.state = state;
   }
 
+  static getLinks(data) {
+    const links = {
+      prevPageToken: '',
+      nextPageToken: '',
+    };
+    if (Object.prototype.hasOwnProperty.call(data, 'prevPageToken')) {
+      links.prevPageToken = data.prevPageToken;
+    }
+    if (Object.prototype.hasOwnProperty.call(data, 'nextPageToken')) {
+      links.nextPageToken = data.nextPageToken;
+    }
+    return links;
+  }
+
   static parseData(data) {
     return data.items.map((elem) => {
       const id = elem.id.videoId;
@@ -32,11 +46,19 @@ class AppModel {
     return templateParam;
   }
 
-  async getClips(searchString) {
+  async getClips(searchString, addParam = '') {
+    const clips = {
+      links: undefined,
+      data: undefined,
+    };
+    let addParamLink = addParam;
+    if (addParamLink !== '') {
+      addParamLink = `&pageToken=${addParamLink}`;
+    }
     const { url, key } = this.state;
     let { mode } = this.state.modeSearch;
     let templateParam = AppModel.getTemplateParam(this.state.modeSearch.param);
-    let templateQuery = `${url}${mode}?key=${key}${templateParam}&q=${searchString}`;
+    let templateQuery = `${url}${mode}?key=${key}${templateParam}&q=${searchString}${addParamLink}`;
     // fetch(`${templateQuery}`)
     //   .then(response => response.json())
     //   .then(data => console.log(data));
@@ -44,9 +66,10 @@ class AppModel {
     let response = await fetch(templateQuery);
     let data = await response.json();
 
-    const clips = AppModel.parseData(data);
+    clips.links = AppModel.getLinks(data);
+    clips.data = AppModel.parseData(data);
 
-    const idClips = clips.map(elem => elem.id).join(',');
+    const idClips = clips.data.map(elem => elem.id).join(',');
 
     ({ mode } = this.state.modeStatistics);
     templateParam = AppModel.getTemplateParam(this.state.modeStatistics.param);
@@ -54,8 +77,8 @@ class AppModel {
     response = await fetch(templateQuery);
     data = await response.json();
 
-    clips.forEach((clipElem, i) => {
-      clips[i].viewCount = data.items.find(item => item.id === clipElem.id).statistics.viewCount;
+    clips.data.forEach((clipEl, i) => {
+      clips.data[i].viewCount = data.items.find(item => item.id === clipEl.id).statistics.viewCount;
     });
 
     return clips;

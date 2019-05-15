@@ -4,6 +4,7 @@ import '@fortawesome/fontawesome-free/js/solid';
 
 class Carousel {
   constructor() {
+    this.currentCard = 4;
     this.position = 0;
     this.width = 250;
     this.count = 4;
@@ -26,37 +27,6 @@ class Carousel {
     this.carousel.appendChild(this.buttonNext);
     this.gallery.appendChild(this.clips);
     parent.appendChild(this.carousel);
-    this.buttonPrev.addEventListener('click', () => {
-      this.moveRight(this.count);
-    });
-    this.buttonNext.addEventListener('click', () => {
-      this.moveLeft(this.count);
-    });
-    this.gallery.addEventListener('mousedown', (eventMousedown) => {
-      const { target } = eventMousedown;
-      if (target.classList.contains('clip-card')) {
-        const targetCoords = Carousel.getCoords(target);
-        const targetCoordLeft = targetCoords.left;
-        const targetCoordRight = targetCoords.left + target.offsetWidth;
-        // think about if use addEventListener - > how to remove handler? ( if
-        // try use function name handler -> truoble with scope (targetCoordLeft, targetCoordRight),
-        // ok, if set listener like Class property function or static function -> same truoble
-        // with targetCoordLeft, targetCoordRight), must or transfer targetCoordLeft,
-        // targetCoordRight in listener like Class property function or static function (how?)
-        // or maybe use closures (how?). Don't want use property of class like this.targetCoordLeft,
-        // this.targetCoordRight
-        // so, let it be for now...
-        document.onmouseup = (eventMouseup) => {
-          document.onmouseup = null;
-          const currentCoordX = eventMouseup.pageX;
-          if (currentCoordX > targetCoordRight) {
-            this.moveRight(1);
-          } else if (currentCoordX < targetCoordLeft) {
-            this.moveLeft(1);
-          }
-        };
-      }
-    });
   }
 
   moveLeft(count) {
@@ -64,11 +34,42 @@ class Carousel {
     // think about this limit right side of slider (will be continuous load of cards)
     this.position = Math.max(this.position - this.width * count, -this.width * (numItems - count));
     this.gallery.firstChild.style.marginLeft = `${this.position}px`;
+    this.currentCard += count;
   }
 
   moveRight(count) {
     this.position = Math.min(this.position + this.width * count, 0);
     this.gallery.firstChild.style.marginLeft = `${this.position}px`;
+    this.currentCard -= count;
+    if (this.currentCard < 4) {
+      this.currentCard = 4;
+    }
+  }
+
+  swipe(eventMousedown) {
+    const { target } = eventMousedown;
+    if (target.classList.contains('clip-card')) {
+      const targetCoords = Carousel.getCoords(target);
+      const targetCoordLeft = targetCoords.left;
+      const targetCoordRight = targetCoords.left + target.offsetWidth;
+      // think about if use addEventListener - > how to remove handler? ( if
+      // try use function name handler -> truoble with scope (targetCoordLeft, targetCoordRight),
+      // ok, if set listener like Class property function or static function -> same truoble
+      // with targetCoordLeft, targetCoordRight), must or transfer targetCoordLeft,
+      // targetCoordRight in listener like Class property function or static function (how?)
+      // or maybe use closures (how?). Don't want use property of class like this.targetCoordLeft,
+      // this.targetCoordRight
+      // so, let it be for now...
+      document.onmouseup = (eventMouseup) => {
+        document.onmouseup = null;
+        const currentCoordX = eventMouseup.pageX;
+        if (currentCoordX > targetCoordRight) {
+          this.moveRight(1);
+        } else if (currentCoordX < targetCoordLeft) {
+          this.moveLeft(1);
+        }
+      };
+    }
   }
 
   static createFontAwesome(elemParent, styleFont, font) {
@@ -107,21 +108,27 @@ class ClipCard {
 class AppView {
   constructor() {
     this.root = document.querySelector('body');
+    this.searchBox = document.createElement('div');
     this.searchInput = document.createElement('input');
     this.searchButton = document.createElement('button');
     this.showBox = document.createElement('div');
+    this.carouselViewer = '';
   }
 
   addSearchInterface() {
+    //  переделать потом на форму
+    // this.searchInput.value = 'Place your request here...';
     this.searchButton.innerHTML = 'Search';
-    this.root.appendChild(this.searchInput);
-    this.root.appendChild(this.searchButton);
+    this.searchBox.appendChild(this.searchInput);
+    this.searchBox.appendChild(this.searchButton);
+    this.searchBox.classList.add('search-box');
+    this.root.appendChild(this.searchBox);
   }
 
   addShowInterface() {
     this.showBox.classList.add('show-box');
-    const carousel = new Carousel();
-    carousel.init(this.showBox);
+    this.carouselViewer = new Carousel();
+    this.carouselViewer.init(this.showBox);
     this.root.appendChild(this.showBox);
   }
 

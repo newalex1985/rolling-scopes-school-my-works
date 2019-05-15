@@ -2,10 +2,42 @@ body {
   background-color: #5a4e4e;
 }
 
+.search-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-box > input {
+  width: 400px;
+  height: 25px;
+  border-radius: 10px;
+  background-color: beige;
+  font-size: 20px;
+  font-family: arial;
+  color: #5a4e4e;
+}
+
+.search-box > button {
+  width: 65px;
+  height: 32px;
+  border-radius: 15px;
+  margin: 10px;
+  background-color: #393030;
+  color: beige;
+  font-size: inherit;
+  transition: all 250ms;
+}
+
+.search-box > button:hover {
+  background-color: beige;
+  color: #5a4e4e;
+}
+
 .show-box {
   display: none;
   justify-content: center;
-  margin: 10% auto;
+  margin: 5% auto;
 }
 
 .carousel {
@@ -14,10 +46,6 @@ body {
   align-items: center;
   width: 90%;
   padding: 10px 40px;
-  /*border: 1px solid #CCC;
-  border-radius: 15px;
-  background: #eee;
-  */
 }
 
 .gallery {
@@ -68,6 +96,7 @@ body {
 
 .arrow:hover {
   background-color: beige;
+  color: #1b1919;
   cursor: pointer;
 }
 
