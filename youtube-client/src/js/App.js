@@ -7,7 +7,8 @@ class App {
     this.links = '';
     this.state = {
       url: 'https://www.googleapis.com/youtube/v3/',
-      key: 'AIzaSyCzlEk4X-i9xvRqcShxiJ7DTcSmwmRbMcw',
+      // key: 'AIzaSyCzlEk4X-i9xvRqcShxiJ7DTcSmwmRbMcw',
+      key: 'AIzaSyB8u3qcbdYyO1F2n8mwkRYc5nZBtztmOcU',
       modeSearch: {
         mode: 'search',
         param: {
@@ -51,16 +52,16 @@ class App {
 
   addShowListeneres(carouselView) {
     carouselView.buttonPrev.addEventListener('click', () => {
-      carouselView.moveRight(carouselView.count);
-      this.reloadChek(carouselView);
+      carouselView.moveRight(carouselView.numPerFrame);
+      this.reloadCheck(carouselView);
     });
     carouselView.buttonNext.addEventListener('click', () => {
-      carouselView.moveLeft(carouselView.count);
-      this.reloadChek(carouselView);
+      carouselView.moveLeft(carouselView.numPerFrame);
+      this.reloadCheck(carouselView);
     });
     carouselView.gallery.addEventListener('mousedown', (eventMousedown) => {
       carouselView.swipe(eventMousedown);
-      this.reloadChek(carouselView);
+      this.reloadCheck(carouselView);
     });
   }
 
@@ -73,15 +74,23 @@ class App {
       const model = new AppModel(this.state);
       const clips = await model.getClips(this.searchString);
       this.links = clips.links;
-      this.viewer.render(clips.data);
+      this.viewer.render(clips.data, 'start');
     }
   }
 
-  async reloadChek(view) {
-    console.log(view.currentCard);
-    if (view.currentCard >= 12) {
+  async reloadCheck(view) {
+    console.log(`${view.carouselState.left} - ${view.carouselState.right}`);
+    const { total } = view.carouselState;
+    const { numPerFrame } = view;
+    const numToCatch = total - (total % numPerFrame);
+    console.log(total);
+    console.log(`numToCatch: ${numToCatch}`);
+    const reload = ((total - numToCatch) < numPerFrame);
+    if (view.carouselState.dir === 'left' && view.carouselState.right >= numToCatch && reload) {
       const model = new AppModel(this.state);
       const clips = await model.getClips(this.searchString, this.links.nextPageToken);
+      this.links = clips.links;
+      this.viewer.render(clips.data, 'continuation');
       console.log(clips);
     }
   }

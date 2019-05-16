@@ -4,10 +4,15 @@ import '@fortawesome/fontawesome-free/js/solid';
 
 class Carousel {
   constructor() {
-    this.currentCard = 4;
+    this.carouselState = {
+      left: 1,
+      right: 4,
+      dir: '',
+      total: 0,
+    };
     this.position = 0;
     this.width = 250;
-    this.count = 4;
+    this.numPerFrame = 4;
     this.carousel = document.createElement('div');
     this.buttonPrev = document.createElement('div');
     this.buttonNext = document.createElement('div');
@@ -30,19 +35,24 @@ class Carousel {
   }
 
   moveLeft(count) {
-    const numItems = this.gallery.firstChild.children.length;
+    const numItems = this.clips.children.length;
     // think about this limit right side of slider (will be continuous load of cards)
     this.position = Math.max(this.position - this.width * count, -this.width * (numItems - count));
-    this.gallery.firstChild.style.marginLeft = `${this.position}px`;
-    this.currentCard += count;
+    this.move(this.position);
+    this.carouselState.dir = 'left';
+    this.carouselState.left += count;
+    this.carouselState.right += count;
   }
 
   moveRight(count) {
     this.position = Math.min(this.position + this.width * count, 0);
-    this.gallery.firstChild.style.marginLeft = `${this.position}px`;
-    this.currentCard -= count;
-    if (this.currentCard < 4) {
-      this.currentCard = 4;
+    this.move(this.position);
+    this.carouselState.dir = 'right';
+    this.carouselState.left -= count;
+    this.carouselState.right -= count;
+    if (this.carouselState.right < 4) {
+      this.carouselState.left = 1;
+      this.carouselState.right = 4;
     }
   }
 
@@ -70,6 +80,10 @@ class Carousel {
         }
       };
     }
+  }
+
+  move(position) {
+    this.clips.style.marginLeft = `${position}px`;
   }
 
   static createFontAwesome(elemParent, styleFont, font) {
@@ -132,19 +146,33 @@ class AppView {
     this.root.appendChild(this.showBox);
   }
 
-  render(clips) {
+  render(clips, renderMode) {
     console.log(clips);
     this.showBox.style.display = 'flex';
-    const contentNew = document.createElement('ul');
-    const contentCurrent = this.showBox.querySelector('ul');
+    const clipsContainer = this.carouselViewer.clips;
+    //  put in function
+    if (renderMode !== 'continuation') {
+      while (clipsContainer.firstChild) {
+        clipsContainer.firstChild.remove();
+      }
+      // put in function clear
+      this.carouselViewer.carouselState.left = 1;
+      this.carouselViewer.carouselState.right = 4;
+      this.carouselViewer.carouselState.dir = '';
+      this.carouselViewer.carouselState.total = 0;
+
+      // marginleft clear
+      this.carouselViewer.position = 0;
+      this.carouselViewer.move(this.carouselViewer.position);
+    }
+
     clips.forEach((clip) => {
-      // put in function
       const clipCard = new ClipCard(clip).createClipCard();
       const list = document.createElement('li');
       list.appendChild(clipCard);
-      contentNew.appendChild(list);
+      clipsContainer.appendChild(list);
     });
-    contentCurrent.parentElement.replaceChild(contentNew, contentCurrent);
+    this.carouselViewer.carouselState.total += clips.length;
   }
 }
 

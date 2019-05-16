@@ -51,10 +51,11 @@ body {
 .gallery {
   overflow: hidden;
   width: 1000px;
+  height: 320px;
 }
 
 .gallery ul {
-  width: 9999px;
+  width: 100000px;
   margin: 0;
   padding: 0;
   list-style: none;
