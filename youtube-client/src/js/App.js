@@ -9,7 +9,8 @@ class App {
       url: 'https://www.googleapis.com/youtube/v3/',
       // key: 'AIzaSyCzlEk4X-i9xvRqcShxiJ7DTcSmwmRbMcw',
       // key: 'AIzaSyB8u3qcbdYyO1F2n8mwkRYc5nZBtztmOcU',
-      key: 'AIzaSyClBfOYge2WAPlMme9Gesz8OYrOXVwxdFM',
+      // key: 'AIzaSyClBfOYge2WAPlMme9Gesz8OYrOXVwxdFM',
+      key: 'AIzaSyASt-b-5J410NojfuC7uPDGKWqHXgS-6cU',
       modeSearch: {
         mode: 'search',
         param: {
