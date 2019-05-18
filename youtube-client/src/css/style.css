@@ -14,7 +14,7 @@ body {
   border-radius: 10px;
   background-color: beige;
   font-size: 20px;
-  font-family: arial;
+  font-family: Arial, Helvetica, sans-serif;
   color: #5a4e4e;
 }
 
@@ -26,6 +26,7 @@ body {
   background-color: #393030;
   color: beige;
   font-size: inherit;
+  font-family: Arial, Helvetica, sans-serif;
   transition: all 250ms;
 }
 
@@ -112,11 +113,6 @@ body {
 .pagination {
   display: flex;
   justify-content: center;
-  /*
-  border: 1px solid white;
-  margin: 20px auto;
-  padding: 10px 10px;
-  */
 }
 
 .pagination-page {
@@ -129,6 +125,15 @@ body {
 }
 
 .pagination-page-active {
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: #f50e0e;;
+  color: beige;
+  text-align: center;
   transform: scale(1.5, 1.5);
+}
+
+.pagination-representation {
+  height: 20px;
+  color: beige;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
 }

@@ -14,6 +14,7 @@ class Carousel {
     this.position = 0;
     this.width = 250;
     this.numPerFrame = 4;
+    this.maxNumPagesToView = 12;
     this.carousel = document.createElement('div');
     this.slider = document.createElement('div');
     this.buttonPrev = document.createElement('div');
@@ -172,35 +173,41 @@ class AppView {
   }
 
   renderPagination() {
-    // must to check on num of numPagesPagination for pagination [25-29]
-    // --
-    const { carouselState, pagination } = this.carouselViewer;
-    const { total } = carouselState;
-    const numPagesPagination = Math.ceil(total / this.carouselViewer.numPerFrame);
+    const {
+      carouselState, numPerFrame, maxNumPagesToView, pagination,
+    } = this.carouselViewer;
+    const { left, right, total } = carouselState;
+    const numPagesPag = Math.ceil(total / this.carouselViewer.numPerFrame);
     while (pagination.firstChild) {
       pagination.firstChild.remove();
     }
 
     console.log('removed all pages');
 
-    for (let i = 0; i < numPagesPagination; i += 1) {
-      const page = document.createElement('div');
-      page.classList.add('pagination-page');
-      pagination.appendChild(page);
+    if (right <= (maxNumPagesToView * numPerFrame)) {
+      const numPgToView = (numPagesPag <= maxNumPagesToView) ? numPagesPag : maxNumPagesToView;
+      for (let i = 0; i < numPgToView; i += 1) {
+        const page = document.createElement('div');
+        page.classList.add('pagination-page');
+        pagination.appendChild(page);
+      }
+      console.log(`added pages: ${numPgToView}`);
+      console.log(right);
+      console.log(`prev num act pag: ${carouselState.numActivePage}`);
+      let elem = pagination.children[carouselState.numActivePage - 1];
+      elem.innerHTML = '';
+      elem.classList.remove('pagination-page-active');
+      carouselState.numActivePage = Math.ceil(right / numPerFrame);
+      console.log(`current num act pag: ${carouselState.numActivePage}`);
+      elem = pagination.children[carouselState.numActivePage - 1];
+      elem.innerHTML = `${carouselState.numActivePage}`;
+      elem.classList.add('pagination-page-active');
+    } else {
+      const representation = document.createElement('div');
+      representation.innerHTML = `[${left} - ${right}] of ${total}`;
+      representation.classList.add('pagination-representation');
+      pagination.appendChild(representation);
     }
-    console.log(`added pages: ${numPagesPagination}`);
-    // --
-    const { right } = carouselState;
-    console.log(right);
-    const { numPerFrame } = this.carouselViewer;
-    console.log(`prev num act pag: ${carouselState.numActivePage}`);
-    let elem = pagination.children[carouselState.numActivePage - 1];
-    elem.classList.remove('pagination-page-active');
-    carouselState.numActivePage = Math.ceil(right / numPerFrame);
-    console.log(`current num act pag: ${carouselState.numActivePage}`);
-    elem = pagination.children[carouselState.numActivePage - 1];
-    elem.classList.add('pagination-page-active');
-    // --
   }
 }
 
