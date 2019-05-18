@@ -9,29 +9,49 @@ class Carousel {
       right: 4,
       dir: '',
       total: 0,
+      numActivePage: 1,
     };
     this.position = 0;
     this.width = 250;
     this.numPerFrame = 4;
     this.carousel = document.createElement('div');
+    this.slider = document.createElement('div');
     this.buttonPrev = document.createElement('div');
     this.buttonNext = document.createElement('div');
     this.gallery = document.createElement('div');
     this.clips = document.createElement('ul');
+    this.pagination = document.createElement('div');
   }
 
   init(parent) {
     this.carousel.classList.add('carousel');
+    this.slider.classList.add('slider');
     this.buttonPrev.classList.add('arrow');
     Carousel.createFontAwesome(this.buttonPrev, 'fas', 'fa-arrow-left');
     this.buttonNext.classList.add('arrow');
     Carousel.createFontAwesome(this.buttonNext, 'fas', 'fa-arrow-right');
     this.gallery.classList.add('gallery');
-    this.carousel.appendChild(this.buttonPrev);
-    this.carousel.appendChild(this.gallery);
-    this.carousel.appendChild(this.buttonNext);
+    this.pagination.classList.add('pagination');
+    this.slider.appendChild(this.buttonPrev);
+    this.slider.appendChild(this.gallery);
+    this.slider.appendChild(this.buttonNext);
     this.gallery.appendChild(this.clips);
+    this.carousel.appendChild(this.slider);
+    this.carousel.appendChild(this.pagination);
     parent.appendChild(this.carousel);
+  }
+
+  clear() {
+    while (this.clips.firstChild) {
+      this.clips.firstChild.remove();
+    }
+    this.position = 0;
+    this.move(this.position);
+    this.carouselState.left = 1;
+    this.carouselState.right = 4;
+    this.carouselState.dir = '';
+    this.carouselState.total = 0;
+    this.carouselState.numActivePage = 1;
   }
 
   moveLeft(count) {
@@ -56,30 +76,18 @@ class Carousel {
     }
   }
 
-  swipe(eventMousedown) {
+  static swipe(eventMousedown) {
     const { target } = eventMousedown;
     if (target.classList.contains('clip-card')) {
       const targetCoords = Carousel.getCoords(target);
       const targetCoordLeft = targetCoords.left;
       const targetCoordRight = targetCoords.left + target.offsetWidth;
-      // think about if use addEventListener - > how to remove handler? ( if
-      // try use function name handler -> truoble with scope (targetCoordLeft, targetCoordRight),
-      // ok, if set listener like Class property function or static function -> same truoble
-      // with targetCoordLeft, targetCoordRight), must or transfer targetCoordLeft,
-      // targetCoordRight in listener like Class property function or static function (how?)
-      // or maybe use closures (how?). Don't want use property of class like this.targetCoordLeft,
-      // this.targetCoordRight
-      // so, let it be for now...
-      document.onmouseup = (eventMouseup) => {
-        document.onmouseup = null;
-        const currentCoordX = eventMouseup.pageX;
-        if (currentCoordX > targetCoordRight) {
-          this.moveRight(1);
-        } else if (currentCoordX < targetCoordLeft) {
-          this.moveLeft(1);
-        }
+      return {
+        targetCoordLeft,
+        targetCoordRight,
       };
     }
+    return undefined;
   }
 
   move(position) {
@@ -146,24 +154,12 @@ class AppView {
     this.root.appendChild(this.showBox);
   }
 
-  render(clips, renderMode) {
+  renderSlider(clips, renderMode) {
     console.log(clips);
     this.showBox.style.display = 'flex';
     const clipsContainer = this.carouselViewer.clips;
-    //  put in function
     if (renderMode !== 'continuation') {
-      while (clipsContainer.firstChild) {
-        clipsContainer.firstChild.remove();
-      }
-      // put in function clear
-      this.carouselViewer.carouselState.left = 1;
-      this.carouselViewer.carouselState.right = 4;
-      this.carouselViewer.carouselState.dir = '';
-      this.carouselViewer.carouselState.total = 0;
-
-      // marginleft clear
-      this.carouselViewer.position = 0;
-      this.carouselViewer.move(this.carouselViewer.position);
+      this.carouselViewer.clear();
     }
 
     clips.forEach((clip) => {
@@ -173,6 +169,38 @@ class AppView {
       clipsContainer.appendChild(list);
     });
     this.carouselViewer.carouselState.total += clips.length;
+  }
+
+  renderPagination() {
+    // must to check on num of numPagesPagination for pagination [25-29]
+    // --
+    const { carouselState, pagination } = this.carouselViewer;
+    const { total } = carouselState;
+    const numPagesPagination = Math.ceil(total / this.carouselViewer.numPerFrame);
+    while (pagination.firstChild) {
+      pagination.firstChild.remove();
+    }
+
+    console.log('removed all pages');
+
+    for (let i = 0; i < numPagesPagination; i += 1) {
+      const page = document.createElement('div');
+      page.classList.add('pagination-page');
+      pagination.appendChild(page);
+    }
+    console.log(`added pages: ${numPagesPagination}`);
+    // --
+    const { right } = carouselState;
+    console.log(right);
+    const { numPerFrame } = this.carouselViewer;
+    console.log(`prev num act pag: ${carouselState.numActivePage}`);
+    let elem = pagination.children[carouselState.numActivePage - 1];
+    elem.classList.remove('pagination-page-active');
+    carouselState.numActivePage = Math.ceil(right / numPerFrame);
+    console.log(`current num act pag: ${carouselState.numActivePage}`);
+    elem = pagination.children[carouselState.numActivePage - 1];
+    elem.classList.add('pagination-page-active');
+    // --
   }
 }
 

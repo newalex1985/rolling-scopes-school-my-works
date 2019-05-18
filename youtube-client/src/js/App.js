@@ -7,8 +7,8 @@ class App {
     this.links = '';
     this.state = {
       url: 'https://www.googleapis.com/youtube/v3/',
-      // key: 'AIzaSyCzlEk4X-i9xvRqcShxiJ7DTcSmwmRbMcw',
-      key: 'AIzaSyB8u3qcbdYyO1F2n8mwkRYc5nZBtztmOcU',
+      key: 'AIzaSyCzlEk4X-i9xvRqcShxiJ7DTcSmwmRbMcw',
+      // key: 'AIzaSyB8u3qcbdYyO1F2n8mwkRYc5nZBtztmOcU',
       modeSearch: {
         mode: 'search',
         param: {
@@ -54,14 +54,31 @@ class App {
     carouselView.buttonPrev.addEventListener('click', () => {
       carouselView.moveRight(carouselView.numPerFrame);
       this.reloadCheck(carouselView);
+      // this.viewer.renderPagination();
     });
     carouselView.buttonNext.addEventListener('click', () => {
       carouselView.moveLeft(carouselView.numPerFrame);
       this.reloadCheck(carouselView);
+      // this.viewer.renderPagination();
     });
     carouselView.gallery.addEventListener('mousedown', (eventMousedown) => {
-      carouselView.swipe(eventMousedown);
-      this.reloadCheck(carouselView);
+      const result = carouselView.constructor.swipe(eventMousedown);
+      if (result !== undefined) {
+        const mouseupHandler = (eventMouseup) => {
+          document.removeEventListener('mouseup', mouseupHandler);
+          const { targetCoordLeft, targetCoordRight } = result;
+          const currentCoordX = eventMouseup.pageX;
+          if (currentCoordX > targetCoordRight) {
+            carouselView.moveRight(1);
+          } else if (currentCoordX < targetCoordLeft) {
+            carouselView.moveLeft(1);
+          }
+          console.log(`Enter: ${this}`);
+          this.reloadCheck(carouselView);
+          // this.viewer.renderPagination();
+        };
+        document.addEventListener('mouseup', mouseupHandler);
+      }
     });
   }
 
@@ -74,7 +91,8 @@ class App {
       const model = new AppModel(this.state);
       const clips = await model.getClips(this.searchString);
       this.links = clips.links;
-      this.viewer.render(clips.data, 'start');
+      this.viewer.renderSlider(clips.data, 'start');
+      this.viewer.renderPagination();
     }
   }
 
@@ -90,9 +108,23 @@ class App {
       const model = new AppModel(this.state);
       const clips = await model.getClips(this.searchString, this.links.nextPageToken);
       this.links = clips.links;
-      this.viewer.render(clips.data, 'continuation');
+      this.viewer.renderSlider(clips.data, 'continuation');
       console.log(clips);
     }
+
+    // // !!! must to read actualy value of total after potential request "getClips"
+    // ({ total } = view.carouselState);
+    // // !!! necessary put this check, because possible delay response from the youtube server
+    // if (view.carouselState.right > total) {
+    // } else {
+    //   this.viewer.renderPagination();
+    // }
+
+    // re-write the code above from async to prommises beaause
+    //  possible delay response from the youtube server ???
+    //  must check more carefully
+    // let it be so...
+    this.viewer.renderPagination();
   }
 }
 
