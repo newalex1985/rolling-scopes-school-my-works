@@ -37,7 +37,8 @@ class App {
     this.viewer.addShowInterface();
     this.addShowListeneres(this.viewer.carouselViewer);
     this.viewer.resize();
-    App.addResizeListeneres(this.viewer);
+    // App.addResizeListeneres(this.viewer);
+    this.addResizeListeneres(this.viewer);
   }
 
   addSearchListeners(appView) {
@@ -83,9 +84,17 @@ class App {
     });
   }
 
-  static addResizeListeneres(appView) {
+  // static addResizeListeneres(appView) {
+  //   window.addEventListener('resize', () => {
+  //     appView.resize();
+  //   });
+  // }
+
+  addResizeListeneres(appView) {
     window.addEventListener('resize', () => {
       appView.resize();
+      console.log('call reload');
+      this.reloadCheck(appView.carouselViewer);
     });
   }
 

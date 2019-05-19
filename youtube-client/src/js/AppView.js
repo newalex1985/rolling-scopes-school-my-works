@@ -114,7 +114,7 @@ class AppView {
       numPerFrame = 1;
     }
     carouselViewer.resize(numPerFrame);
-    this.renderPagination();
+    // this.renderPagination();
   }
 }
 
