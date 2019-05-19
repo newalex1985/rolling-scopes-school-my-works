@@ -54,12 +54,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 40px;
+  padding: 10px 0;
 }
 
 .gallery {
   overflow: hidden;
-  width: 1000px;
   height: 320px;
 }
 
@@ -74,9 +73,7 @@ body {
 
 .clip-card {
   position: relative;
-  width: 230px;
   height: 300px;
-  margin: 10px 10px;
   border-radius: 7%;
   opacity: .8;
   transition: all 400ms;
@@ -90,7 +87,6 @@ body {
 
 .clip-picture {
   display: block;
-  width: 230px;
   height: 50%;
   border-radius: 10px 10px 0 0;
 }
@@ -149,7 +145,7 @@ body {
   text-align: center;
   padding: 15px 0;
   color: wheat;
-  margin: 20px;
+  margin: 10px;
   box-sizing: border-box;
 }
 
@@ -175,7 +171,7 @@ body {
 .pagination-page {
   width: 20px;
   height: 20px;
-  margin: 10px;
+  margin: 5px;
   border-radius: 50%;
   background-color: beige;
   transition: all 250ms;

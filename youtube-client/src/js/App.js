@@ -8,9 +8,9 @@ class App {
     this.state = {
       url: 'https://www.googleapis.com/youtube/v3/',
       // key: 'AIzaSyCzlEk4X-i9xvRqcShxiJ7DTcSmwmRbMcw',
-      // key: 'AIzaSyB8u3qcbdYyO1F2n8mwkRYc5nZBtztmOcU',
+      key: 'AIzaSyB8u3qcbdYyO1F2n8mwkRYc5nZBtztmOcU',
       // key: 'AIzaSyClBfOYge2WAPlMme9Gesz8OYrOXVwxdFM',
-      key: 'AIzaSyASt-b-5J410NojfuC7uPDGKWqHXgS-6cU',
+      // key: 'AIzaSyASt-b-5J410NojfuC7uPDGKWqHXgS-6cU',
       modeSearch: {
         mode: 'search',
         param: {
@@ -36,6 +36,8 @@ class App {
     this.addSearchListeners(this.viewer);
     this.viewer.addShowInterface();
     this.addShowListeneres(this.viewer.carouselViewer);
+    this.viewer.resize();
+    App.addResizeListeneres(this.viewer);
   }
 
   addSearchListeners(appView) {
@@ -81,6 +83,12 @@ class App {
     });
   }
 
+  static addResizeListeneres(appView) {
+    window.addEventListener('resize', () => {
+      appView.resize();
+    });
+  }
+
   saveSearchString(string) {
     this.searchString = string.trim();
   }
@@ -99,11 +107,10 @@ class App {
     console.log(`${view.carouselState.left} - ${view.carouselState.right}`);
     const { total } = view.carouselState;
     const { numPerFrame } = view;
-    const numToCatch = total - (total % numPerFrame);
+    const numToCatch = total - numPerFrame;
     console.log(total);
     console.log(`numToCatch: ${numToCatch}`);
-    const reload = ((total - numToCatch) < numPerFrame);
-    if (view.carouselState.dir === 'left' && view.carouselState.right >= numToCatch && reload) {
+    if (view.carouselState.dir === 'left' && view.carouselState.right >= numToCatch) {
       const model = new AppModel(this.state);
       const clips = await model.getClips(this.searchString, this.links.nextPageToken);
       this.links = clips.links;

@@ -49,7 +49,7 @@ class Carousel {
     this.position = 0;
     this.move(this.position);
     this.carouselState.left = 1;
-    this.carouselState.right = 4;
+    this.carouselState.right = this.carouselState.left + this.numPerFrame - 1;
     this.carouselState.dir = '';
     this.carouselState.total = 0;
     this.carouselState.numActivePage = 1;
@@ -73,8 +73,15 @@ class Carousel {
     this.carouselState.right -= count;
     if (this.carouselState.right < 4) {
       this.carouselState.left = 1;
-      this.carouselState.right = 4;
+      this.carouselState.right = this.carouselState.left + this.numPerFrame - 1;
     }
+  }
+
+  resize(numPerFrame) {
+    this.numPerFrame = numPerFrame;
+    this.carouselState.right = this.carouselState.left + this.numPerFrame - 1;
+    this.gallery.style.width = `${this.numPerFrame * this.width}px`;
+    console.log(`resizing carousel, numPerFrame: ${this.numPerFrame}, right: ${this.carouselState.right}`);
   }
 
   static swipe(eventMousedown) {
@@ -117,7 +124,7 @@ class ClipCard {
     this.clip = clip;
   }
 
-  createClipCard() {
+  createClipCard(width) {
     const containerClipCard = document.createElement('div');
     const clipPrewiew = document.createElement('a');
     //  transfer from parametr
@@ -125,6 +132,7 @@ class ClipCard {
     const clipPicture = document.createElement('img');
     clipPicture.setAttribute('src', `${this.clip.clipPreview.medium.url}`);
     clipPicture.classList.add('clip-picture');
+    clipPicture.style.width = `${width - 10 * 2}px`;
     clipPrewiew.appendChild(clipPicture);
     const information = document.createElement('div');
     information.classList.add('clip-information');
@@ -177,6 +185,8 @@ class ClipCard {
     title.classList.add('clip-title');
     containerClipCard.appendChild(title);
     containerClipCard.classList.add('clip-card');
+    containerClipCard.style.margin = '10px';
+    containerClipCard.style.width = `${width - 10 * 2}px`;
     return containerClipCard;
   }
 
@@ -199,8 +209,7 @@ class AppView {
   }
 
   addSearchInterface() {
-    //  переделать потом на форму
-    // this.searchInput.value = 'Place your request here...';
+    this.searchInput.setAttribute('placeholder', 'Place your request here...');
     this.searchButton.innerHTML = 'Search';
     this.searchBox.appendChild(this.searchInput);
     this.searchBox.appendChild(this.searchButton);
@@ -224,7 +233,7 @@ class AppView {
     }
 
     clips.forEach((clip) => {
-      const clipCard = new ClipCard(clip).createClipCard();
+      const clipCard = new ClipCard(clip).createClipCard(this.carouselViewer.width);
       const list = document.createElement('li');
       list.appendChild(clipCard);
       clipsContainer.appendChild(list);
@@ -242,7 +251,7 @@ class AppView {
       pagination.firstChild.remove();
     }
 
-    console.log('removed all pages');
+    console.log(`removed all pages, right now is: ${right}`);
 
     if (right <= (maxNumPagesToView * numPerFrame)) {
       const numPgToView = (numPagesPag <= maxNumPagesToView) ? numPagesPag : maxNumPagesToView;
@@ -254,20 +263,52 @@ class AppView {
       console.log(`added pages: ${numPgToView}`);
       console.log(right);
       console.log(`prev num act pag: ${carouselState.numActivePage}`);
-      let elem = pagination.children[carouselState.numActivePage - 1];
-      elem.innerHTML = '';
-      elem.classList.remove('pagination-page-active');
-      carouselState.numActivePage = Math.ceil(right / numPerFrame);
-      console.log(`current num act pag: ${carouselState.numActivePage}`);
-      elem = pagination.children[carouselState.numActivePage - 1];
-      elem.innerHTML = `${carouselState.numActivePage}`;
-      elem.classList.add('pagination-page-active');
+      if (pagination.children.length > 0) {
+        if (pagination.children.length >= carouselState.numActivePage) {
+          const elemPrev = pagination.children[carouselState.numActivePage - 1];
+          elemPrev.innerHTML = '';
+          elemPrev.classList.remove('pagination-page-active');
+        }
+        carouselState.numActivePage = Math.ceil(right / numPerFrame);
+        console.log(`current num act pag: ${carouselState.numActivePage}`);
+        const elemCur = pagination.children[carouselState.numActivePage - 1];
+        elemCur.innerHTML = `${carouselState.numActivePage}`;
+        elemCur.classList.add('pagination-page-active');
+      }
     } else {
       const representation = document.createElement('div');
-      representation.innerHTML = `[${left} - ${right}] of ${total}`;
+      const innerRp = `${(numPerFrame > 1) ? `[${left} - ${right}] ` : `${left}`} of ${total}`;
+      representation.innerHTML = innerRp;
       representation.classList.add('pagination-representation');
       pagination.appendChild(representation);
     }
+  }
+
+  resize() {
+    const { carouselViewer } = this;
+    const { clientWidth } = this.root;
+    const style = getComputedStyle(carouselViewer.buttonPrev);
+    const { width, marginLeft, marginRight } = style;
+    const buttonWidth = parseInt(width, 10) + parseInt(marginLeft, 10) + parseInt(marginRight, 10);
+    const compareValue4perFrame = 2 * buttonWidth + 4 * carouselViewer.width;
+    const compareValue3perFrame = 2 * buttonWidth + 3 * carouselViewer.width;
+    const compareValue2perFrame = 2 * buttonWidth + 2 * carouselViewer.width;
+    let numPerFrame;
+    if (clientWidth >= compareValue4perFrame) {
+      console.log(`4: >=${compareValue4perFrame}: ${clientWidth}`);
+      numPerFrame = 4;
+    } else if (clientWidth >= compareValue3perFrame) {
+      console.log(`3: >=${compareValue3perFrame}: ${clientWidth}`);
+      numPerFrame = 3;
+    } else if (clientWidth >= compareValue2perFrame) {
+      console.log(`2: >=${compareValue2perFrame}: ${clientWidth}`);
+      numPerFrame = 2;
+    } else {
+      console.log(`1: < ${compareValue2perFrame}: ${clientWidth}`);
+      numPerFrame = 1;
+    }
+    carouselViewer.resize(numPerFrame);
+    this.renderPagination();
   }
 }
 
