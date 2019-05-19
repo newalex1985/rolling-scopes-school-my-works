@@ -1,4 +1,3 @@
-// where must be this class
 class Clip {
   constructor(id, title, clipPreview, videoDescription, author, uploadDate) {
     this.id = id;
