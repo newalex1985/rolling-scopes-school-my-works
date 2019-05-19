@@ -37,7 +37,6 @@ class App {
     this.viewer.addShowInterface();
     this.addShowListeneres(this.viewer.carouselViewer);
     this.viewer.resize();
-    // App.addResizeListeneres(this.viewer);
     this.addResizeListeneres(this.viewer);
   }
 
@@ -76,7 +75,6 @@ class App {
           } else if (currentCoordX < targetCoordLeft) {
             carouselView.moveLeft(1);
           }
-          console.log(`Enter: ${this}`);
           this.reloadCheck(carouselView);
         };
         document.addEventListener('mouseup', mouseupHandler);
@@ -84,16 +82,9 @@ class App {
     });
   }
 
-  // static addResizeListeneres(appView) {
-  //   window.addEventListener('resize', () => {
-  //     appView.resize();
-  //   });
-  // }
-
   addResizeListeneres(appView) {
     window.addEventListener('resize', () => {
       appView.resize();
-      console.log('call reload');
       this.reloadCheck(appView.carouselViewer);
     });
   }
@@ -113,18 +104,14 @@ class App {
   }
 
   async reloadCheck(view) {
-    console.log(`${view.carouselState.left} - ${view.carouselState.right}`);
     const { total } = view.carouselState;
     const { numPerFrame } = view;
     const numToCatch = total - numPerFrame;
-    console.log(total);
-    console.log(`numToCatch: ${numToCatch}`);
     if (view.carouselState.dir === 'left' && view.carouselState.right >= numToCatch) {
       const model = new AppModel(this.state);
       const clips = await model.getClips(this.searchString, this.links.nextPageToken);
       this.links = clips.links;
       this.viewer.renderSlider(clips.data, 'continuation');
-      console.log(clips);
     }
     this.viewer.renderPagination();
   }

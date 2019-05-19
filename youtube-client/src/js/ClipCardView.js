@@ -6,7 +6,6 @@ class ClipCard {
   createClipCard(width) {
     const containerClipCard = document.createElement('div');
     const clipPrewiew = document.createElement('a');
-    //  transfer from parametr
     clipPrewiew.setAttribute('href', `https://www.youtube.com/watch?v=${this.clip.id}`);
     const clipPicture = document.createElement('img');
     clipPicture.setAttribute('src', `${this.clip.clipPreview.medium.url}`);

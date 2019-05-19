@@ -77,7 +77,6 @@ class Carousel {
     this.numPerFrame = numPerFrame;
     this.carouselState.right = this.carouselState.left + this.numPerFrame - 1;
     this.gallery.style.width = `${this.numPerFrame * this.width}px`;
-    console.log(`resizing carousel, numPerFrame: ${this.numPerFrame}, right: ${this.carouselState.right}`);
   }
 
   static swipe(eventMousedown) {

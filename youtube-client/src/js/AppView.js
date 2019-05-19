@@ -31,7 +31,6 @@ class AppView {
   }
 
   renderSlider(clips, renderMode) {
-    console.log(clips);
     this.showBox.style.display = 'flex';
     const clipsContainer = this.carouselViewer.clips;
     if (renderMode !== 'continuation') {
@@ -57,8 +56,6 @@ class AppView {
       pagination.firstChild.remove();
     }
 
-    console.log(`removed all pages, right now is: ${right}`);
-
     if (right <= (maxNumPagesToView * numPerFrame)) {
       const numPgToView = (numPagesPag <= maxNumPagesToView) ? numPagesPag : maxNumPagesToView;
       for (let i = 0; i < numPgToView; i += 1) {
@@ -66,9 +63,7 @@ class AppView {
         page.classList.add('pagination-page');
         pagination.appendChild(page);
       }
-      console.log(`added pages: ${numPgToView}`);
-      console.log(right);
-      console.log(`prev num act pag: ${carouselState.numActivePage}`);
+
       if (pagination.children.length > 0) {
         if (pagination.children.length >= carouselState.numActivePage) {
           const elemPrev = pagination.children[carouselState.numActivePage - 1];
@@ -76,7 +71,6 @@ class AppView {
           elemPrev.classList.remove('pagination-page-active');
         }
         carouselState.numActivePage = Math.ceil(right / numPerFrame);
-        console.log(`current num act pag: ${carouselState.numActivePage}`);
         const elemCur = pagination.children[carouselState.numActivePage - 1];
         elemCur.innerHTML = `${carouselState.numActivePage}`;
         elemCur.classList.add('pagination-page-active');
@@ -101,20 +95,15 @@ class AppView {
     const compareValue2perFrame = 2 * buttonWidth + 2 * carouselViewer.width;
     let numPerFrame;
     if (clientWidth >= compareValue4perFrame) {
-      console.log(`4: >=${compareValue4perFrame}: ${clientWidth}`);
       numPerFrame = 4;
     } else if (clientWidth >= compareValue3perFrame) {
-      console.log(`3: >=${compareValue3perFrame}: ${clientWidth}`);
       numPerFrame = 3;
     } else if (clientWidth >= compareValue2perFrame) {
-      console.log(`2: >=${compareValue2perFrame}: ${clientWidth}`);
       numPerFrame = 2;
     } else {
-      console.log(`1: < ${compareValue2perFrame}: ${clientWidth}`);
       numPerFrame = 1;
     }
     carouselViewer.resize(numPerFrame);
-    // this.renderPagination();
   }
 }
 
