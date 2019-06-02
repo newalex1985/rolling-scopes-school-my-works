@@ -6,6 +6,7 @@ class App {
   constructor() {
     this.canvas = document.getElementById('canvas-draw');
     this.context = this.canvas.getContext('2d');
+    this.animationArea = document.getElementById('canvas-animation');
     this.frames = [];
     this.fps = 1;
   }
@@ -83,9 +84,19 @@ class App {
       let count = 0;
       setInterval(() => {
         const frame = this.frames[count % 3];
-        App.draw(frame);
+        this.draw(frame);
         count += 1;
       }, 1000 / this.fps);
+    });
+
+    document.getElementById('full-screen').addEventListener('click', () => {
+      if (this.animationArea.requestFullscreen) {
+        this.animationArea.requestFullscreen();
+      } else if (this.animationArea.webkitrequestFullscreen) {
+        this.animationArea.webkitRequestFullscreen();
+      } else if (this.animationArea.mozRequestFullscreen) {
+        this.animationArea.mozRequestFullScreen();
+      }
     });
 
     this.canvas.addEventListener('mousemove', (e) => {
@@ -130,10 +141,9 @@ class App {
     });
   }
 
-  static draw(frame) {
-    const canvas = document.getElementById('canvas-animation');
-    if (canvas.getContext) {
-      const context = canvas.getContext('2d');
+  draw(frame) {
+    if (this.animationArea.getContext) {
+      const context = this.animationArea.getContext('2d');
       context.clearRect(0, 0, 500, 500);
       const img = new Image();
       img.src = frame;
