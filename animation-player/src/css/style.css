@@ -65,3 +65,22 @@
   justify-content: center;
   align-items: center;
 }
+
+#fps {
+  display:flex;
+  justify-content: space-around;
+  background: #eee;
+  color: #777;
+  width: 130px;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 1px solid;
+}
+
+#fps-up, #fps-down, #fps-value {
+  width: 20px;
+  border: 1px solid;
+  margin: auto 5px;
+  text-align: center;
+  background: greenyellow;
+}

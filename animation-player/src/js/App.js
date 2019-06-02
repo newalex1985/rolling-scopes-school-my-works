@@ -7,6 +7,7 @@ class App {
     this.canvas = document.getElementById('canvas-draw');
     this.context = this.canvas.getContext('2d');
     this.frames = [];
+    this.fps = 1;
   }
 
   start() {
@@ -15,6 +16,24 @@ class App {
 
     this.context.lineCap = 'round';
     this.context.lineWidth = 8;
+
+    document.getElementById('fps-value').innerHTML = this.fps;
+
+    document.getElementById('fps-up').addEventListener('click', () => {
+      this.fps += 1;
+      if (this.fps === 25) {
+        this.fps = 24;
+      }
+      document.getElementById('fps-value').innerHTML = this.fps;
+    });
+
+    document.getElementById('fps-down').addEventListener('click', () => {
+      this.fps -= 1;
+      if (this.fps === 0) {
+        this.fps = 1;
+      }
+      document.getElementById('fps-value').innerHTML = this.fps;
+    });
 
     document.getElementById('clear').addEventListener('click', () => {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -66,7 +85,7 @@ class App {
         const frame = this.frames[count % 3];
         App.draw(frame);
         count += 1;
-      }, 1000 / 1);
+      }, 1000 / this.fps);
     });
 
     this.canvas.addEventListener('mousemove', (e) => {
