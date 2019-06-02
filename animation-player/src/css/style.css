@@ -1,0 +1,53 @@
+.button {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  padding: 1px;
+  cursor: pointer;
+  border: solid 1px #fff;
+}
+
+.button:hover {
+  border: solid 1px #f00;
+}
+
+.button:active {
+  border: solid 1px #ff0;
+}
+
+#palette, #frames, #canvas {
+  border: solid 1px #aaa;
+  cursor: default;
+}
+
+#palette {
+  width: 57px;
+}
+
+#frames {
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#clear, #save-frame {
+  background: #eee;
+  color: #777;
+  width: 130px;
+  text-align: center;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 1px solid;
+}
+
+.container {
+  display: flex;
+}
+
+.frame {
+  width: 120px;
+  height: 120px;
+  border: 1px solid;
+  margin: 10px auto;
+}
