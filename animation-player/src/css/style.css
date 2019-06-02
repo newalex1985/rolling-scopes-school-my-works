@@ -15,7 +15,7 @@
   border: solid 1px #ff0;
 }
 
-#palette, #frames, #canvas {
+#palette, #frames, #canvas-draw, #canvas-animation {
   border: solid 1px #aaa;
   cursor: default;
 }
@@ -31,7 +31,7 @@
   align-items: center;
 }
 
-#clear, #save-frame {
+#clear, #save-frame, #start-animation {
   background: #eee;
   color: #777;
   width: 130px;

@@ -2,8 +2,9 @@ import '../css/style.css';
 
 class App {
   constructor() {
-    this.canvas = document.getElementById('canvas');
+    this.canvas = document.getElementById('canvas-draw');
     this.context = this.canvas.getContext('2d');
+    this.frames = [];
   }
 
   start() {
@@ -26,8 +27,20 @@ class App {
       const img = document.createElement('img');
       img.style.width = width;
       img.style.height = height;
-      img.src = this.canvas.toDataURL('image/png');
+      const src = this.canvas.toDataURL('image/png');
+      img.src = src;
       frame.appendChild(img);
+      this.frames.push(src);
+    });
+
+    document.getElementById('start-animation').addEventListener('click', () => {
+      console.log('start animation');
+      let count = 0;
+      setInterval(() => {
+        const frame = this.frames[count % 3];
+        App.draw(frame);
+        count += 1;
+      }, 1000 / 1);
     });
 
     this.canvas.addEventListener('mousemove', (e) => {
@@ -51,6 +64,20 @@ class App {
         this.context.strokeStyle = e.target.style.backgroundColor;
       }
     });
+  }
+
+  static draw(frame) {
+    const canvas = document.getElementById('canvas-animation');
+    if (canvas.getContext) {
+      const context = canvas.getContext('2d');
+      const img = new Image();
+      img.src = frame;
+      const pattern = context.createPattern(img, 'no-repeat');
+      context.fillStyle = pattern;
+      context.fillRect(0, 0, 600, 600);
+      // context.strokeRect(0, 0, 600, 600);
+      console.log('draw');
+    }
   }
 
   static generatePalette(palette) {
