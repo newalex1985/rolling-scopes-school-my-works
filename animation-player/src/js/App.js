@@ -4,40 +4,45 @@ import '@fortawesome/fontawesome-free/js/solid';
 
 class App {
   constructor() {
-    this.canvas = document.getElementById('canvas-draw');
-    this.context = this.canvas.getContext('2d');
+    this.drawArea = document.getElementById('canvas-draw');
+    this.drawContext = this.drawArea.getContext('2d');
     this.animationArea = document.getElementById('canvas-animation');
+    this.animationContext = this.animationArea.getContext('2d');
     this.frames = [];
-    this.fps = 1;
+    this.animationSetting = {
+      state: 'stop',
+      timerId: '',
+      fps: 1,
+    };
   }
 
   start() {
     // generation Palette
     App.generatePalette(document.getElementById('palette'));
 
-    this.context.lineCap = 'round';
-    this.context.lineWidth = 8;
+    this.drawContext.lineCap = 'round';
+    this.drawContext.lineWidth = 8;
 
-    document.getElementById('fps-value').innerHTML = this.fps;
+    document.getElementById('fps-value').innerHTML = this.animationSetting.fps;
 
     document.getElementById('fps-up').addEventListener('click', () => {
-      this.fps += 1;
-      if (this.fps === 25) {
-        this.fps = 24;
+      this.animationSetting.fps += 1;
+      if (this.animationSetting.fps === 25) {
+        this.animationSetting.fps = 24;
       }
-      document.getElementById('fps-value').innerHTML = this.fps;
+      document.getElementById('fps-value').innerHTML = this.animationSetting.fps;
     });
 
     document.getElementById('fps-down').addEventListener('click', () => {
-      this.fps -= 1;
-      if (this.fps === 0) {
-        this.fps = 1;
+      this.animationSetting.fps -= 1;
+      if (this.animationSetting.fps === 0) {
+        this.animationSetting.fps = 1;
       }
-      document.getElementById('fps-value').innerHTML = this.fps;
+      document.getElementById('fps-value').innerHTML = this.animationSetting.fps;
     });
 
     document.getElementById('clear').addEventListener('click', () => {
-      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.drawContext.clearRect(0, 0, this.drawArea.width, this.drawArea.height);
     });
 
     document.getElementById('save-frame').addEventListener('click', () => {
@@ -73,7 +78,7 @@ class App {
       const img = document.createElement('img');
       img.style.width = width;
       img.style.height = height;
-      const src = this.canvas.toDataURL('image/png');
+      const src = this.drawArea.toDataURL('image/png');
       img.src = src;
       frame.appendChild(img);
 
@@ -81,12 +86,22 @@ class App {
     });
 
     document.getElementById('start-animation').addEventListener('click', () => {
-      let count = 0;
-      setInterval(() => {
-        const frame = this.frames[count % 3];
-        this.draw(frame);
-        count += 1;
-      }, 1000 / this.fps);
+      if (this.animationSetting.state === 'stop') {
+        this.animationSetting.state = 'start';
+        let count = 0;
+        this.animationSetting.timerId = setInterval(() => {
+          const frame = this.frames[count];
+          this.draw(frame);
+          count += 1;
+          if (count === this.frames.length) {
+            count = 0;
+          }
+        }, 1000 / this.animationSetting.fps);
+      } else {
+        this.animationSetting.state = 'stop';
+        clearInterval(this.animationSetting.timerId);
+        this.draw();
+      }
     });
 
     document.getElementById('full-screen').addEventListener('click', () => {
@@ -99,25 +114,25 @@ class App {
       }
     });
 
-    this.canvas.addEventListener('mousemove', (e) => {
+    this.drawArea.addEventListener('mousemove', (e) => {
       const x = e.offsetX;
       const y = e.offsetY;
       const dx = e.movementX;
       const dy = e.movementY;
 
-      // if any botton pressing - > drawing
+      // if any button pressing - > drawing
       if (e.buttons > 0) {
-        this.context.beginPath();
-        this.context.moveTo(x, y);
-        this.context.lineTo(x - dx, y - dy);
-        this.context.stroke();
-        this.context.closePath();
+        this.drawContext.beginPath();
+        this.drawContext.moveTo(x, y);
+        this.drawContext.lineTo(x - dx, y - dy);
+        this.drawContext.stroke();
+        this.drawContext.closePath();
       }
     });
 
     document.getElementById('palette').addEventListener('click', (e) => {
       if (e.target.hasAttribute('paletteColor')) {
-        this.context.strokeStyle = e.target.style.backgroundColor;
+        this.drawContext.strokeStyle = e.target.style.backgroundColor;
       }
     });
 
@@ -141,20 +156,21 @@ class App {
     });
   }
 
-  draw(frame) {
-    if (this.animationArea.getContext) {
-      const context = this.animationArea.getContext('2d');
-      context.clearRect(0, 0, 500, 500);
+  draw(frame = undefined) {
+    if (frame !== undefined) {
+      this.animationContext.clearRect(0, 0, 500, 600);
       const img = new Image();
       img.src = frame;
-      const pattern = context.createPattern(img, 'no-repeat');
-      context.fillStyle = pattern;
-      context.fillRect(0, 0, 500, 500);
+      const pattern = this.animationContext.createPattern(img, 'no-repeat');
+      this.animationContext.fillStyle = pattern;
+      this.animationContext.fillRect(0, 0, 500, 600);
+    } else {
+      this.animationContext.clearRect(0, 0, this.animationArea.width, this.animationArea.height);
     }
   }
 
   static generatePalette(palette) {
-    // generarion pallete, total 3*3*3 colors = 27
+    // generation pallete, total 3*3*3 colors = 27
     const max = 2;
     for (let r = 0; r <= max; r += 1) {
       for (let g = 0; g <= max; g += 1) {
