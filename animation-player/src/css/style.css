@@ -15,23 +15,24 @@
   border: solid 1px #ff0;
 }
 
-#palette, #frames, #canvas-draw, #canvas-animation {
+.tool-section, .frame-section, .draw-section, .animation-section {
   border: solid 1px #aaa;
   cursor: default;
 }
 
-#palette {
+.tool-section {
   width: 57px;
 }
 
-#frames {
+.frame-section {
   width: 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: solid 1px;
 }
 
-#clear, #save-frame, #start-animation, #full-screen {
+.clear, .add-frame, .start-stop-animation, .full-screen {
   background: #eee;
   color: #777;
   width: 130px;
@@ -41,8 +42,15 @@
   border: 1px solid;
 }
 
-.container {
+.common-container {
   display: flex;
+  height: 600px;
+}
+
+.frames-area {
+  width: 150px;
+  height: 430px;
+  overflow: auto;
 }
 
 .frame {
@@ -66,7 +74,7 @@
   align-items: center;
 }
 
-#fps {
+.fps {
   display:flex;
   justify-content: space-around;
   background: #eee;
@@ -77,7 +85,7 @@
   border: 1px solid;
 }
 
-#fps-up, #fps-down, #fps-value {
+.fps-up, .fps-down, .fps-value {
   width: 20px;
   border: 1px solid;
   margin: auto 5px;
