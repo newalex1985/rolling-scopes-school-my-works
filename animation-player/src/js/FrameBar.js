@@ -71,7 +71,7 @@ class FrameBar {
 
   addClearButtonListener() {
     this.clearButton.addEventListener('click', () => {
-      this.drawViewLink.clear();
+      this.drawViewLink.draw();
     });
   }
 
@@ -91,8 +91,8 @@ class FrameBar {
         this.animationSetting.state = 'start';
         let count = 0;
         this.animationSetting.timerId = setInterval(() => {
-          const frame = this.frames[count];
-          this.animationViewLink.draw(frame);
+          const frameData = this.frames[count];
+          this.animationViewLink.draw(frameData);
           count += 1;
           if (count === this.frames.length) {
             count = 0;
@@ -112,6 +112,7 @@ class FrameBar {
     });
   }
 
+  // new show functional
   addframesAreaListeners() {
     this.framesArea.addEventListener('click', (e) => {
       const { target } = e;
@@ -122,6 +123,12 @@ class FrameBar {
           this.renumerationFrames();
         } else if (purpose === 'copy') {
           this.copyFrame(target.parentNode.parentNode.parentNode);
+        } else if (purpose === 'show') {
+          const frame = target.parentNode;
+          const arrayFrames = Array.prototype.slice.call(this.framesArea.children);
+          const indexFrame = arrayFrames.indexOf(frame);
+          const frameData = this.frames[indexFrame];
+          this.drawViewLink.draw(frameData);
         }
       }
     });

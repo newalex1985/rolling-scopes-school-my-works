@@ -13,6 +13,9 @@ class Frame {
   add(parent, frameNum) {
     this.frame.classList.add('frame');
 
+    // new
+    this.frame.setAttribute('data-purpose', 'show');
+
     this.buttonNum.classList.add('button-frame');
     this.buttonNum.style.top = 0;
     this.buttonNum.style.left = 0;

@@ -52,8 +52,8 @@ class DrawView extends AnimationView {
     this.context.strokeStyle = this.colorPickerLink.currentColor;
   }
 
-  clear() {
-    this.context.clearRect(0, 0, this.sizeArea.width, this.sizeArea.heigth);
+  draw(frame = undefined) {
+    super.draw(frame);
   }
 
   addListeners() {
