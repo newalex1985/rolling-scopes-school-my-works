@@ -1,6 +1,4 @@
 import '../css/style.css';
-import '@fortawesome/fontawesome-free/js/fontawesome';
-import '@fortawesome/fontawesome-free/js/solid';
 import ColorPickerView from './ColorPickerView';
 import FrameBar from './FrameBar';
 import { AnimationView, DrawView } from './CanvasView';
@@ -35,9 +33,6 @@ class AppView {
     this.drawViewer = new DrawView(colorPicker, 500, 500);
     this.drawViewer.init(this.drawSection);
     this.drawViewer.addListeners();
-
-    frameBar.drawViewLink = this.drawViewer;
-
     // animation-section
     this.animationSection.classList.add('animation-section');
     this.animationViewer = new AnimationView(500, 500);
@@ -51,6 +46,8 @@ class AppView {
     this.commonContainer.appendChild(this.drawSection);
     this.commonContainer.appendChild(this.animationSection);
     this.root.appendChild(this.commonContainer);
+
+    frameBar.bindingCanvas(this.drawViewer);
   }
 }
 

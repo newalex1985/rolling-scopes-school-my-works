@@ -61,6 +61,14 @@
   margin: 10px auto;
 }
 
+.frame:hover {
+  border: 1px solid grey;
+}
+
+.frame-active {
+  border: 5px solid goldenrod;
+}
+
 .button-frame {
   position: absolute;
   width: 30px;

@@ -43,6 +43,8 @@ class DrawView extends AnimationView {
   constructor(colorPickerLink, width, heigth) {
     super(width, heigth);
     this.colorPickerLink = colorPickerLink;
+    this.indexCurrentFrame = '';
+    this.emptyContent = '';
   }
 
   init(parrent) {

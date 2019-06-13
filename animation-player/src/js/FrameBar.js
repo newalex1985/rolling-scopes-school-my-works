@@ -17,6 +17,7 @@ class FrameBar {
       state: 'stop',
       timerId: '',
     };
+    this.timerIdFramePreview = '';
   }
 
   init(parent) {
@@ -47,11 +48,40 @@ class FrameBar {
     parent.appendChild(this.frameBar);
   }
 
+  bindingCanvas(link) {
+    this.drawViewLink = link;
+    this.drawViewLink.emptyContent = this.drawViewLink.area.toDataURL('image/png');
+
+    const frame = new Frame(this.drawViewLink.emptyContent);
+    frame.add(this.framesArea, this.frames.length + 1);
+    frame.fillContent(this.drawViewLink.emptyContent);
+    this.frames.push(this.drawViewLink.emptyContent);
+
+    this.drawViewLink.indexCurrentFrame = 0;
+    this.makeFrameActive(this.drawViewLink.indexCurrentFrame);
+
+    this.drawViewLink.area.addEventListener('mouseover', () => {
+      this.timerIdFramePreview = setInterval(() => {
+        this.drawFramePreview();
+      }, 250);
+    });
+    this.drawViewLink.area.addEventListener('mouseout', () => {
+      clearInterval(this.timerIdFramePreview);
+    });
+  }
+
+  drawFramePreview() {
+    const data = this.drawViewLink.area.toDataURL('image/png');
+    this.frames[this.drawViewLink.indexCurrentFrame] = data;
+    this.framesArea.children[this.drawViewLink.indexCurrentFrame].children[3].src = data;
+  }
+
   deleteFrame(frame) {
     const arrayFrames = Array.prototype.slice.call(this.framesArea.children);
     const indexFrame = arrayFrames.indexOf(frame);
     frame.remove();
     this.frames.splice(indexFrame, 1);
+    return indexFrame;
   }
 
   renumerationFrames() {
@@ -69,19 +99,41 @@ class FrameBar {
     this.frames.push(frameContent);
   }
 
+  makeFrameActive(indexFrame) {
+    for (let i = 0; i < this.framesArea.children.length; i += 1) {
+      if (this.framesArea.children[i].classList.contains('frame-active')) {
+        this.framesArea.children[i].classList.remove('frame-active');
+      }
+    }
+    this.framesArea.children[indexFrame].classList.add('frame-active');
+  }
+
+  commonFrameClickHandler(indexCurrentFrame) {
+    this.makeFrameActive(indexCurrentFrame);
+    const frameData = this.frames[indexCurrentFrame];
+    this.drawViewLink.draw(frameData);
+  }
+
   addClearButtonListener() {
     this.clearButton.addEventListener('click', () => {
       this.drawViewLink.draw();
+      this.drawFramePreview();
     });
   }
 
   addAddFrameButtonListener() {
     this.addFrameButton.addEventListener('click', () => {
-      const frameContent = this.drawViewLink.area.toDataURL('image/png');
+      const frameContent = this.drawViewLink.emptyContent;
+
+      // this.drawViewLink.draw(frameContent);
+      this.drawViewLink.draw();
+
       const frame = new Frame(frameContent);
       frame.add(this.framesArea, this.frames.length + 1);
       frame.fillContent(frameContent);
       this.frames.push(frameContent);
+      this.drawViewLink.indexCurrentFrame = this.frames.length - 1;
+      this.makeFrameActive(this.drawViewLink.indexCurrentFrame);
     });
   }
 
@@ -112,24 +164,29 @@ class FrameBar {
     });
   }
 
-  // new show functional
   addframesAreaListeners() {
     this.framesArea.addEventListener('click', (e) => {
       const { target } = e;
       if (target.parentNode.hasAttribute('data-purpose')) {
         const { purpose } = target.parentNode.dataset;
         if (purpose === 'delete') {
-          this.deleteFrame(target.parentNode.parentNode.parentNode);
+          // check: don't allow delete the last frame
+          if (target.parentNode.parentNode.parentNode.parentNode.children.length === 1) {
+            return;
+          }
+          let indexFrame = this.deleteFrame(target.parentNode.parentNode.parentNode);
           this.renumerationFrames();
+          indexFrame -= 1;
+          this.drawViewLink.indexCurrentFrame = (indexFrame === -1) ? 0 : indexFrame;
         } else if (purpose === 'copy') {
           this.copyFrame(target.parentNode.parentNode.parentNode);
+          this.drawViewLink.indexCurrentFrame = this.frames.length - 1;
         } else if (purpose === 'show') {
           const frame = target.parentNode;
           const arrayFrames = Array.prototype.slice.call(this.framesArea.children);
-          const indexFrame = arrayFrames.indexOf(frame);
-          const frameData = this.frames[indexFrame];
-          this.drawViewLink.draw(frameData);
+          this.drawViewLink.indexCurrentFrame = arrayFrames.indexOf(frame);
         }
+        this.commonFrameClickHandler(this.drawViewLink.indexCurrentFrame);
       }
     });
   }
@@ -142,7 +199,6 @@ class FrameBar {
     this.addframesAreaListeners();
   }
 
-  // class?
   static createButton(parrent, { styleButton, nameButton }) {
     const button = document.createElement('div');
     button.classList.add(styleButton);
