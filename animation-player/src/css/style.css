@@ -82,6 +82,10 @@
   border: 5px solid goldenrod;
 }
 
+.frame-potential {
+  border: 5px dashed gray;
+}
+
 .button-frame {
   position: absolute;
   width: 30px;

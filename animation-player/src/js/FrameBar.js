@@ -165,6 +165,7 @@ class FrameBar {
   }
 
   addframesAreaListeners() {
+    const self = this;
     function canvasMosedown(e) {
       console.log('mousedown');
       const sceletons = document.querySelector('.frames-area').children;
@@ -181,15 +182,14 @@ class FrameBar {
       function getFramesPosition() {
         const sceletonsArray = Array.prototype.slice.call(sceletons);
         const framesPosition = sceletonsArray.map((elem) => {
-          const startY = getCoords(elem).top;
-          const endY = startY + elem.offsetHeight;
+          const startY = getCoords(elem).top + elem.offsetHeight / 2 - 30;
+          const endY = startY + 30;
           return [startY, endY];
         });
         return framesPosition;
       }
 
       const elmnt = e.target.parentNode;
-      // const elmnt = e.target;
       console.log(elmnt);
       const positions = getFramesPosition();
 
@@ -207,61 +207,82 @@ class FrameBar {
       // let movePositionX = 0; let movePositionY = 0; let startPositionX = 0; let startPositionY = 0;
       let movePositionY = 0; let startPositionY = 0;
       // eslint-disable-next-line no-shadow
-      let a = 0;
       function elementDrag(ee) {
-        console.log('mousemove a', a);
-        a += 1;
+        console.log('move');
         // calculate the new cursor position:
         // movePositionX = startPositionX - ee.pageX;
         movePositionY = startPositionY - ee.pageY;
         // startPositionX = ee.pageX;
         startPositionY = ee.pageY;
         // set the element's new position:
-        console.log('movePositionY', movePositionY);
-        console.log('getCoords(elmnt).top', getCoords(elmnt.parentNode.parentNode).top);
 
         // elmnt.style.top = `${elmnt.offsetTop - movePositionY}px`;
         elmnt.parentNode.parentNode.style.top = `${getCoords(elmnt.parentNode.parentNode).top - movePositionY}px`;
         // elmnt.style.left = `${elmnt.offsetLeft - movePositionX}px`;
-        // elmnt.style.top = `${ee.pageY - movePositionY}px`;
-        // elmnt.style.left = `${ee.pageX - movePositionX}px`;
+
+        for (let i = 0; i < sceletons.length; i += 1) {
+          if (sceletons[i].classList.contains('frame-potential')) {
+            sceletons[i].classList.remove('frame-potential');
+          }
+        }
 
         const numCoverFrame = findFrame(ee.pageY);
         if (numCoverFrame !== undefined) {
-          for (let i = 0; i < sceletons.length; i += 1) {
-            if (sceletons[i].classList.contains('frame-active')) {
-              sceletons[i].classList.remove('frame-active');
-            }
-          }
-          sceletons[numCoverFrame].classList.add('frame-active');
+          sceletons[numCoverFrame].classList.add('frame-potential');
         }
       }
 
       // eslint-disable-next-line no-unused-vars
       function closeDragElement(eee) {
-        console.log('MOUSEUP');
-        const numCoverFrame = findFrame(eee.pageY);
+        console.log('MOUSEUP stop');
+        elmnt.removeEventListener('mouseup', closeDragElement);
+        document.removeEventListener('mousemove', elementDrag);
 
+        const numCoverFrame = findFrame(eee.pageY);
+        const movingFrame = elmnt.parentNode.parentNode.parentNode;
+        console.log('movingFrame, num', movingFrame, movingFrame.firstChild.innerText);
+        const arraySceletons = Array.prototype.slice.call(sceletons);
+
+        const numMovingFrame = arraySceletons.indexOf(movingFrame);
+        console.log('numMovingFrame', numMovingFrame);
+        console.log('numCoverFrame', numCoverFrame);
         // const target = eee.target.parentNode;
         // console.log('close drag target', target);
-        if (numCoverFrame !== undefined) {
+        // eslint-disable-next-line max-len
+        if (numCoverFrame !== undefined && numMovingFrame !== -1 && numCoverFrame !== numMovingFrame) {
           const elemCopyTo = sceletons[numCoverFrame].cloneNode(true);
-          const elemCopyFrom = elmnt.parentNode.parentNode.parentNode.cloneNode(true);
+          const contentCopyTo = self.frames[numCoverFrame];
+          // const elemCopyFrom = elmnt.parentNode.parentNode.parentNode.cloneNode(true);
+          const elemCopyFrom = sceletons[numMovingFrame].cloneNode(true);
+          const contentCopyFrom = self.frames[numMovingFrame];
           sceletons[numCoverFrame].parentNode.replaceChild(elemCopyFrom, sceletons[numCoverFrame]);
+          self.frames[numCoverFrame] = contentCopyFrom;
           sceletons[numCoverFrame].firstChild.style.position = 'relative';
           sceletons[numCoverFrame].firstChild.style.top = '';
           sceletons[numCoverFrame].firstChild.style.zIndex = '';
-          // target.parentNode.parentNode.replaceChild(elemCopyTo, elmnt.parentNode);
-          console.log('elmnt.parentNode.parentNode', elmnt.parentNode.parentNode);
-          console.log('sceletons[numCoverFrame].parentNode', sceletons[numCoverFrame].parentNode);
           // eslint-disable-next-line max-len
-          sceletons[numCoverFrame].parentNode.replaceChild(elemCopyTo, elmnt.parentNode.parentNode.parentNode);
-          // console.log('target.parentNode', target.parentNode);
-          // target.parentNode.parentNode.replaceChild(elemCopyTo, elmnt.parentNode);
+          // sceletons[numCoverFrame].parentNode.replaceChild(elemCopyTo, elmnt.parentNode.parentNode.parentNode);
+          sceletons[numCoverFrame].parentNode.replaceChild(elemCopyTo, sceletons[numMovingFrame]);
+          self.frames[numMovingFrame] = contentCopyTo;
+          self.renumerationFrames();
+          self.drawViewLink.indexCurrentFrame = numCoverFrame;
+          self.commonFrameClickHandler(self.drawViewLink.indexCurrentFrame);
+          console.log('change');
+        } else {
+          elmnt.parentNode.parentNode.style.position = 'relative';
+          elmnt.parentNode.parentNode.style.top = '';
+          elmnt.parentNode.parentNode.style.zIndex = '';
+          // sceletons[numMovingFrame].firstChild.style.position = 'relative';
+          // sceletons[numMovingFrame].firstChild.style.top = '';
+          // sceletons[numMovingFrame].firstChild.style.zIndex = '';
+          console.log('not change');
         }
 
-        elmnt.removeEventListener('mouseup', closeDragElement);
-        document.removeEventListener('mousemove', elementDrag);
+        for (let i = 0; i < sceletons.length; i += 1) {
+          if (sceletons[i].classList.contains('frame-potential')) {
+            sceletons[i].classList.remove('frame-potential');
+          }
+        }
       }
 
       if (elmnt.hasAttribute('data-purpose')) {
