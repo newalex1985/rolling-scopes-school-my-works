@@ -51,6 +51,17 @@
   width: 150px;
   height: 430px;
   overflow: auto;
+  /* position: relative; */
+  /* border: 1px solid */
+}
+
+ .frame {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border: 1px solid;
+  /* margin: 10px auto; */
+  /* z-index: 2; */
 }
 
 .sceleton {
@@ -62,17 +73,10 @@
   /* z-index: 1; */
  }
 
-.frame {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  border: 1px solid;
-  /* margin: 10px auto; */
-}
 
-/* .frame:hover {
+.frame:hover {
   border: 1px solid grey;
-} */
+}
 
 .frame-active {
   border: 5px solid goldenrod;

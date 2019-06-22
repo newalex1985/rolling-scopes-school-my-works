@@ -73,7 +73,7 @@ class FrameBar {
   drawFramePreview() {
     const data = this.drawViewLink.area.toDataURL('image/png');
     this.frames[this.drawViewLink.indexCurrentFrame] = data;
-    this.framesArea.children[this.drawViewLink.indexCurrentFrame].firstChild.children[3].src = data;
+    this.framesArea.children[this.drawViewLink.indexCurrentFrame].firstChild.children[4].src = data;
   }
 
   deleteFrame(frame) {
@@ -165,29 +165,152 @@ class FrameBar {
   }
 
   addframesAreaListeners() {
+    function canvasMosedown(e) {
+      console.log('mousedown');
+      const sceletons = document.querySelector('.frames-area').children;
+      function getCoords(elem) {
+        const box = elem.getBoundingClientRect();
+        return {
+          // eslint-disable-next-line no-restricted-globals
+          top: box.top + pageYOffset,
+          // eslint-disable-next-line no-restricted-globals
+          // left: box.left + pageXOffset,
+        };
+      }
+
+      function getFramesPosition() {
+        const sceletonsArray = Array.prototype.slice.call(sceletons);
+        const framesPosition = sceletonsArray.map((elem) => {
+          const startY = getCoords(elem).top;
+          const endY = startY + elem.offsetHeight;
+          return [startY, endY];
+        });
+        return framesPosition;
+      }
+
+      const elmnt = e.target.parentNode;
+      // const elmnt = e.target;
+      console.log(elmnt);
+      const positions = getFramesPosition();
+
+      function findFrame(coord) {
+        let num;
+        positions.forEach((elem, index) => {
+          if ((coord > elem[0]) && (coord < elem[1])) {
+            num = index;
+          }
+        });
+        return num;
+      }
+
+      // eslint-disable-next-line max-len
+      // let movePositionX = 0; let movePositionY = 0; let startPositionX = 0; let startPositionY = 0;
+      let movePositionY = 0; let startPositionY = 0;
+      // eslint-disable-next-line no-shadow
+      let a = 0;
+      function elementDrag(ee) {
+        console.log('mousemove a', a);
+        a += 1;
+        // calculate the new cursor position:
+        // movePositionX = startPositionX - ee.pageX;
+        movePositionY = startPositionY - ee.pageY;
+        // startPositionX = ee.pageX;
+        startPositionY = ee.pageY;
+        // set the element's new position:
+        console.log('movePositionY', movePositionY);
+        console.log('getCoords(elmnt).top', getCoords(elmnt.parentNode.parentNode).top);
+
+        // elmnt.style.top = `${elmnt.offsetTop - movePositionY}px`;
+        elmnt.parentNode.parentNode.style.top = `${getCoords(elmnt.parentNode.parentNode).top - movePositionY}px`;
+        // elmnt.style.left = `${elmnt.offsetLeft - movePositionX}px`;
+        // elmnt.style.top = `${ee.pageY - movePositionY}px`;
+        // elmnt.style.left = `${ee.pageX - movePositionX}px`;
+
+        const numCoverFrame = findFrame(ee.pageY);
+        if (numCoverFrame !== undefined) {
+          for (let i = 0; i < sceletons.length; i += 1) {
+            if (sceletons[i].classList.contains('frame-active')) {
+              sceletons[i].classList.remove('frame-active');
+            }
+          }
+          sceletons[numCoverFrame].classList.add('frame-active');
+        }
+      }
+
+      // eslint-disable-next-line no-unused-vars
+      function closeDragElement(eee) {
+        console.log('MOUSEUP');
+        const numCoverFrame = findFrame(eee.pageY);
+
+        // const target = eee.target.parentNode;
+        // console.log('close drag target', target);
+        if (numCoverFrame !== undefined) {
+          const elemCopyTo = sceletons[numCoverFrame].cloneNode(true);
+          const elemCopyFrom = elmnt.parentNode.parentNode.parentNode.cloneNode(true);
+          sceletons[numCoverFrame].parentNode.replaceChild(elemCopyFrom, sceletons[numCoverFrame]);
+          sceletons[numCoverFrame].firstChild.style.position = 'relative';
+          sceletons[numCoverFrame].firstChild.style.top = '';
+          sceletons[numCoverFrame].firstChild.style.zIndex = '';
+          // target.parentNode.parentNode.replaceChild(elemCopyTo, elmnt.parentNode);
+          console.log('elmnt.parentNode.parentNode', elmnt.parentNode.parentNode);
+          console.log('sceletons[numCoverFrame].parentNode', sceletons[numCoverFrame].parentNode);
+          // eslint-disable-next-line max-len
+          sceletons[numCoverFrame].parentNode.replaceChild(elemCopyTo, elmnt.parentNode.parentNode.parentNode);
+          // console.log('target.parentNode', target.parentNode);
+          // target.parentNode.parentNode.replaceChild(elemCopyTo, elmnt.parentNode);
+        }
+
+        elmnt.removeEventListener('mouseup', closeDragElement);
+        document.removeEventListener('mousemove', elementDrag);
+      }
+
+      if (elmnt.hasAttribute('data-purpose')) {
+        const { purpose } = elmnt.dataset;
+        if (purpose === 'move') {
+          console.log('purpose', purpose);
+          console.log('start down');
+          const coords = getCoords(elmnt.parentNode.parentNode);
+          // const shiftX = e.pageX - coords.left;
+          const shiftY = e.pageY - coords.top;
+
+          elmnt.parentNode.parentNode.style.position = 'absolute';
+          elmnt.parentNode.parentNode.style.zIndex = 1000;
+
+          // elmnt.style.left = `${e.pageX - shiftX}px`;
+          elmnt.parentNode.parentNode.style.top = `${e.pageY - shiftY}px`;
+
+          // get the mouse cursor position at startup:
+          // startPositionX = e.pageX;
+          startPositionY = e.pageY;
+
+          elmnt.parentNode.parentNode.addEventListener('mouseup', closeDragElement);
+          // call a function whenever the cursor moves:
+          document.addEventListener('mousemove', elementDrag);
+        }
+      }
+    }
+
+    this.framesArea.addEventListener('mousedown', canvasMosedown);
+    this.framesArea.addEventListener('dragstart', () => false);
+
     this.framesArea.addEventListener('click', (e) => {
+      console.log('click');
       const { target } = e;
       if (target.parentNode.hasAttribute('data-purpose')) {
-        console.log('target.parentNode.parentNode.parentNode.parentNode.parentNode.children.length', target.parentNode.parentNode.parentNode.parentNode.parentNode.children.length);
         const { purpose } = target.parentNode.dataset;
-        console.log('purpose', purpose);
         if (purpose === 'delete') {
-          console.log('entry delete');
           // check: don't allow delete the last frame
           if (target.parentNode.parentNode.parentNode.parentNode.parentNode.children.length === 1) {
             return;
           }
-          console.log('target.parentNode.parentNode.parentNode.parentNode', target.parentNode.parentNode.parentNode.parentNode);
           let indexFrame = this.deleteFrame(target.parentNode.parentNode.parentNode.parentNode);
           this.renumerationFrames();
           indexFrame -= 1;
           this.drawViewLink.indexCurrentFrame = (indexFrame === -1) ? 0 : indexFrame;
         } else if (purpose === 'copy') {
-          console.log('target.parentNode.parentNode.parentNode.parentNode', target.parentNode.parentNode.parentNode.parentNode);
           this.copyFrame(target.parentNode.parentNode.parentNode.parentNode);
           this.drawViewLink.indexCurrentFrame = this.frames.length - 1;
         } else if (purpose === 'show') {
-          console.log('show target.parentNode.parentNode', target.parentNode.parentNode);
           const frame = target.parentNode.parentNode;
           const arrayFrames = Array.prototype.slice.call(this.framesArea.children);
           this.drawViewLink.indexCurrentFrame = arrayFrames.indexOf(frame);

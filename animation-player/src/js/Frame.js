@@ -7,6 +7,7 @@ class Frame {
     this.buttonNum = document.createElement('div');
     this.buttonDelete = document.createElement('div');
     this.buttonCopy = document.createElement('div');
+    this.buttonMove = document.createElement('div');
     this.frameContent = frameContent;
   }
 
@@ -33,6 +34,13 @@ class Frame {
     Frame.createFontAwesome(this.buttonCopy, 'fas', 'fa-copy');
     this.buttonCopy.firstChild.setAttribute('data-purpose', 'copy');
     this.frame.appendChild(this.buttonCopy);
+
+    this.buttonMove.classList.add('button-frame');
+    this.buttonMove.style.bottom = 0;
+    this.buttonMove.style.left = 0;
+    Frame.createFontAwesome(this.buttonMove, 'fas', 'fa-hand-paper');
+    this.buttonMove.firstChild.setAttribute('data-purpose', 'move');
+    this.frame.appendChild(this.buttonMove);
 
     const sceleton = document.createElement('div');
     sceleton.classList.add('sceleton');
