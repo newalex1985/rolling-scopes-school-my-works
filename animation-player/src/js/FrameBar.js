@@ -73,7 +73,7 @@ class FrameBar {
   drawFramePreview() {
     const data = this.drawViewLink.area.toDataURL('image/png');
     this.frames[this.drawViewLink.indexCurrentFrame] = data;
-    this.framesArea.children[this.drawViewLink.indexCurrentFrame].children[3].src = data;
+    this.framesArea.children[this.drawViewLink.indexCurrentFrame].firstChild.children[3].src = data;
   }
 
   deleteFrame(frame) {
@@ -87,15 +87,15 @@ class FrameBar {
   renumerationFrames() {
     const frames = this.framesArea.children;
     for (let i = 0; i < frames.length; i += 1) {
-      frames[i].firstChild.innerText = i + 1;
+      frames[i].firstChild.firstChild.innerText = i + 1;
     }
   }
 
   copyFrame(frame) {
     const clone = frame.cloneNode(true);
-    clone.firstChild.innerText = `${this.frames.length + 1}`;
+    clone.firstChild.firstChild.innerText = `${this.frames.length + 1}`;
     this.framesArea.appendChild(clone);
-    const frameContent = clone.lastChild.getAttribute('src');
+    const frameContent = clone.firstChild.lastChild.getAttribute('src');
     this.frames.push(frameContent);
   }
 
@@ -168,21 +168,27 @@ class FrameBar {
     this.framesArea.addEventListener('click', (e) => {
       const { target } = e;
       if (target.parentNode.hasAttribute('data-purpose')) {
+        console.log('target.parentNode.parentNode.parentNode.parentNode.parentNode.children.length', target.parentNode.parentNode.parentNode.parentNode.parentNode.children.length);
         const { purpose } = target.parentNode.dataset;
+        console.log('purpose', purpose);
         if (purpose === 'delete') {
+          console.log('entry delete');
           // check: don't allow delete the last frame
-          if (target.parentNode.parentNode.parentNode.parentNode.children.length === 1) {
+          if (target.parentNode.parentNode.parentNode.parentNode.parentNode.children.length === 1) {
             return;
           }
-          let indexFrame = this.deleteFrame(target.parentNode.parentNode.parentNode);
+          console.log('target.parentNode.parentNode.parentNode.parentNode', target.parentNode.parentNode.parentNode.parentNode);
+          let indexFrame = this.deleteFrame(target.parentNode.parentNode.parentNode.parentNode);
           this.renumerationFrames();
           indexFrame -= 1;
           this.drawViewLink.indexCurrentFrame = (indexFrame === -1) ? 0 : indexFrame;
         } else if (purpose === 'copy') {
-          this.copyFrame(target.parentNode.parentNode.parentNode);
+          console.log('target.parentNode.parentNode.parentNode.parentNode', target.parentNode.parentNode.parentNode.parentNode);
+          this.copyFrame(target.parentNode.parentNode.parentNode.parentNode);
           this.drawViewLink.indexCurrentFrame = this.frames.length - 1;
         } else if (purpose === 'show') {
-          const frame = target.parentNode;
+          console.log('show target.parentNode.parentNode', target.parentNode.parentNode);
+          const frame = target.parentNode.parentNode;
           const arrayFrames = Array.prototype.slice.call(this.framesArea.children);
           this.drawViewLink.indexCurrentFrame = arrayFrames.indexOf(frame);
         }

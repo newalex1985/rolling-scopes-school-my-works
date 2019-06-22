@@ -34,7 +34,12 @@ class Frame {
     this.buttonCopy.firstChild.setAttribute('data-purpose', 'copy');
     this.frame.appendChild(this.buttonCopy);
 
-    parent.appendChild(this.frame);
+    const sceleton = document.createElement('div');
+    sceleton.classList.add('sceleton');
+    parent.appendChild(sceleton);
+    sceleton.appendChild(this.frame);
+
+    // parent.appendChild(this.frame);
   }
 
   fillContent(frameContent) {

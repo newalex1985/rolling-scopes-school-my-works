@@ -53,17 +53,26 @@
   overflow: auto;
 }
 
+.sceleton {
+  /* position: relative; */
+  width: 120px;
+  height: 120px;
+  /* border: 1px solid; */
+  margin: 10px auto;
+  /* z-index: 1; */
+ }
+
 .frame {
   position: relative;
   width: 120px;
   height: 120px;
   border: 1px solid;
-  margin: 10px auto;
+  /* margin: 10px auto; */
 }
 
-.frame:hover {
+/* .frame:hover {
   border: 1px solid grey;
-}
+} */
 
 .frame-active {
   border: 5px solid goldenrod;
