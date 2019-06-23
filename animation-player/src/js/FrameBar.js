@@ -167,7 +167,7 @@ class FrameBar {
   addframesAreaListeners() {
     const self = this;
     function canvasMosedown(e) {
-      console.log('mousedown');
+      // console.log('mousedown');
       const sceletons = document.querySelector('.frames-area').children;
       function getCoords(elem) {
         const box = elem.getBoundingClientRect();
@@ -190,7 +190,7 @@ class FrameBar {
       }
 
       const elmnt = e.target.parentNode;
-      console.log(elmnt);
+      // console.log(elmnt);
       const positions = getFramesPosition();
 
       function findFrame(coord) {
@@ -208,7 +208,7 @@ class FrameBar {
       let movePositionY = 0; let startPositionY = 0;
       // eslint-disable-next-line no-shadow
       function elementDrag(ee) {
-        console.log('move');
+        // console.log('move');
         // calculate the new cursor position:
         // movePositionX = startPositionX - ee.pageX;
         movePositionY = startPositionY - ee.pageY;
@@ -234,18 +234,18 @@ class FrameBar {
 
       // eslint-disable-next-line no-unused-vars
       function closeDragElement(eee) {
-        console.log('MOUSEUP stop');
+        // console.log('MOUSEUP stop');
         elmnt.removeEventListener('mouseup', closeDragElement);
         document.removeEventListener('mousemove', elementDrag);
 
         const numCoverFrame = findFrame(eee.pageY);
         const movingFrame = elmnt.parentNode.parentNode.parentNode;
-        console.log('movingFrame, num', movingFrame, movingFrame.firstChild.innerText);
+        // console.log('movingFrame, num', movingFrame, movingFrame.firstChild.innerText);
         const arraySceletons = Array.prototype.slice.call(sceletons);
 
         const numMovingFrame = arraySceletons.indexOf(movingFrame);
-        console.log('numMovingFrame', numMovingFrame);
-        console.log('numCoverFrame', numCoverFrame);
+        // console.log('numMovingFrame', numMovingFrame);
+        // console.log('numCoverFrame', numCoverFrame);
         // const target = eee.target.parentNode;
         // console.log('close drag target', target);
         // eslint-disable-next-line max-len
@@ -267,7 +267,7 @@ class FrameBar {
           self.renumerationFrames();
           self.drawViewLink.indexCurrentFrame = numCoverFrame;
           self.commonFrameClickHandler(self.drawViewLink.indexCurrentFrame);
-          console.log('change');
+          // console.log('change');
         } else {
           elmnt.parentNode.parentNode.style.position = 'relative';
           elmnt.parentNode.parentNode.style.top = '';
@@ -275,7 +275,7 @@ class FrameBar {
           // sceletons[numMovingFrame].firstChild.style.position = 'relative';
           // sceletons[numMovingFrame].firstChild.style.top = '';
           // sceletons[numMovingFrame].firstChild.style.zIndex = '';
-          console.log('not change');
+          // console.log('not change');
         }
 
         for (let i = 0; i < sceletons.length; i += 1) {
@@ -288,8 +288,8 @@ class FrameBar {
       if (elmnt.hasAttribute('data-purpose')) {
         const { purpose } = elmnt.dataset;
         if (purpose === 'move') {
-          console.log('purpose', purpose);
-          console.log('start down');
+          // console.log('purpose', purpose);
+          // console.log('start down');
           const coords = getCoords(elmnt.parentNode.parentNode);
           // const shiftX = e.pageX - coords.left;
           const shiftY = e.pageY - coords.top;
@@ -315,7 +315,7 @@ class FrameBar {
     this.framesArea.addEventListener('dragstart', () => false);
 
     this.framesArea.addEventListener('click', (e) => {
-      console.log('click');
+      // console.log('click');
       const { target } = e;
       if (target.parentNode.hasAttribute('data-purpose')) {
         const { purpose } = target.parentNode.dataset;

@@ -15,9 +15,15 @@
   border: solid 1px #ff0;
 }
 
-.tool-section, .frame-section, .draw-section, .animation-section {
+.tool-section, .frame-section, .animation-section {
   border: solid 1px #aaa;
   cursor: default;
+}
+
+.draw-section {
+  border: solid 1px #aaa;
+  cursor: default;
+  position: relative;
 }
 
 .tool-section {
@@ -116,4 +122,13 @@
   margin: auto 5px;
   text-align: center;
   background: greenyellow;
+}
+
+.draw-section canvas {
+  border: 1px solid;
+}
+
+/* тест убрать потом */
+.positioner {
+  border: 1px solid
 }
