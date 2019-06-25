@@ -40,30 +40,28 @@ class AnimationView {
 }
 
 class DrawView extends AnimationView {
-  constructor(colorPickerLink, width, heigth) {
+  constructor(linkAppView, colorPickerLink, width, heigth) {
     super(width, heigth);
+    this.linkAppView = linkAppView;
     this.colorPickerLink = colorPickerLink;
     this.indexCurrentFrame = '';
     this.emptyContent = '';
-    this.stepsX = 32;
-    this.stepsY = 32;
+    this.canvasResolution = 32;
     this.primitivePositions = this.getPrimitivePositions();
+    this.penUnit = 1;
   }
 
   init(parrent) {
     super.init(parrent);
     this.area.style.position = 'relative';
     this.area.style.zIndex = 10;
-    this.context.lineCap = 'square';
-    this.context.lineWidth = this.sizeArea.width / this.stepsX;
+    // this.context.lineCap = 'square';
+    // this.context.lineWidth = this.sizeArea.width / this.canvasResolution;
     // lineWidth?
-    // dell?
-    this.context.strokeStyle = this.colorPickerLink.currentColor;
-
     this.positioner = document.createElement('div');
     this.positioner.classList.add('positioner');
-    this.positioner.style.width = `${this.sizeArea.width / this.stepsX}px`;
-    this.positioner.style.height = `${this.sizeArea.heigth / this.stepsY}px`;
+    this.positioner.style.width = `${(this.sizeArea.width / this.canvasResolution) * this.penUnit}px`;
+    this.positioner.style.height = `${(this.sizeArea.heigth / this.canvasResolution) * this.penUnit}px`;
     this.positioner.style.position = 'absolute';
     this.positioner.style.top = 0;
     this.positioner.style.left = 0;
@@ -82,18 +80,23 @@ class DrawView extends AnimationView {
       const {
         xBegin, yBegin, xEnd, yEnd,
       } = this.primitivePositions[indexPrimitive];
-      const width = xEnd - xBegin;
-      const height = yEnd - yBegin;
+      const width = (xEnd - xBegin) * this.penUnit;
+      const height = (yEnd - yBegin) * this.penUnit;
+      this.context.strokeRect(xBegin, yBegin, width, height);
       this.context.fillRect(xBegin, yBegin, width, height);
     }
   }
 
+  resizeCanvas() {
+    this.primitivePositions = this.getPrimitivePositions();
+  }
+
   getPrimitivePositions() {
     const primitivePisitions = [];
-    const width = this.sizeArea.width / this.stepsX;
-    const heigth = this.sizeArea.heigth / this.stepsY;
-    for (let i = 0; i < this.stepsX; i += 1) {
-      for (let j = 0; j < this.stepsY; j += 1) {
+    const width = this.sizeArea.width / this.canvasResolution;
+    const heigth = this.sizeArea.heigth / this.canvasResolution;
+    for (let i = 0; i < this.canvasResolution; i += 1) {
+      for (let j = 0; j < this.canvasResolution; j += 1) {
         primitivePisitions.push({
           xBegin: j * width,
           yBegin: i * heigth,
@@ -126,6 +129,11 @@ class DrawView extends AnimationView {
     }
   }
 
+  resizePositioner() {
+    this.positioner.style.width = `${(this.sizeArea.width / this.canvasResolution) * this.penUnit}px`;
+    this.positioner.style.height = `${(this.sizeArea.heigth / this.canvasResolution) * this.penUnit}px`;
+  }
+
   addListeners() {
     this.area.addEventListener('mousemove', (e) => {
       const x = e.offsetX;
@@ -142,6 +150,7 @@ class DrawView extends AnimationView {
       console.log('downMouse');
       const x = e.offsetX;
       const y = e.offsetY;
+      this.context.strokeStyle = this.colorPickerLink.currentColor;
       this.context.fillStyle = this.colorPickerLink.currentColor;
       this.drawPrimitive(x, y);
     });

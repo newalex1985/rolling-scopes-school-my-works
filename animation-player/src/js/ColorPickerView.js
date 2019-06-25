@@ -8,6 +8,7 @@ class ColorPickerView {
 
   init(parent) {
     const { numColor, stylePaletteColor } = this;
+    this.colorPicker.classList.add('color-picker');
     ColorPickerView.generatePalette(this.colorPicker, { numColor, stylePaletteColor });
     parent.appendChild(this.colorPicker);
   }

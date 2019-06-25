@@ -2,6 +2,8 @@ import '../css/style.css';
 import ColorPickerView from './ColorPickerView';
 import FrameBar from './FrameBar';
 import { AnimationView, DrawView } from './CanvasView';
+import PenUnit from './PenUnit';
+import CanvasSize from './CanvasSize';
 
 class AppView {
   constructor() {
@@ -13,26 +15,34 @@ class AppView {
     this.animationSection = document.createElement('div');
     this.drawViewer = '';
     this.animationViewer = '';
+    this.penUnit = '';
+    this.canvasSize = '';
   }
 
   addCommonInterface() {
     this.commonContainer.classList.add('common-container');
     // tool-section
     this.toolSection.classList.add('tool-section');
-    const colorPickerContainer = document.createElement('div');
+    // canvas-size-toll
+    this.penUnit = new PenUnit(this);
+    this.penUnit.init(this.toolSection);
+    this.penUnit.addListeners();
+    // color-picker-tool
     const colorPicker = new ColorPickerView(3, 'button');
-    colorPicker.init(colorPickerContainer);
+    colorPicker.init(this.toolSection);
     colorPicker.addListeners();
-    this.toolSection.appendChild(colorPickerContainer);
     // frame-section
     this.frameSection.classList.add('frame-section');
     const frameBar = new FrameBar();
     frameBar.init(this.frameSection);
     // draw-section
     this.drawSection.classList.add('draw-section');
-    this.drawViewer = new DrawView(colorPicker, 500, 500);
+    this.drawViewer = new DrawView(this, colorPicker, 500, 500);
     this.drawViewer.init(this.drawSection);
     this.drawViewer.addListeners();
+    this.canvasSize = new CanvasSize(this);
+    this.canvasSize.init(this.drawSection);
+    this.canvasSize.addListeners();
     // animation-section
     this.animationSection.classList.add('animation-section');
     this.animationViewer = new AnimationView(500, 500);
