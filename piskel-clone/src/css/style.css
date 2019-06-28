@@ -27,7 +27,33 @@
 }
 
 .tool-section {
-  width: 135px;
+  width: 125px;
+}
+
+.tools-box {
+  border: 1px solid;
+  /* display: flex; */
+}
+
+.tool {
+  box-sizing: border-box;
+  border: 1px solid;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: beige;
+  color: #4e494aed;
+}
+
+.tool:hover {
+  background-color: #686562;
+  color: white;
+}
+
+.tool-active {
+  border: 4px solid #d86032;
 }
 
 .color-picker {
@@ -164,7 +190,7 @@
 .canvas-size-box {
   border: 1px solid;
   width: 80px;
-  height: 86px;
+  height: 75px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

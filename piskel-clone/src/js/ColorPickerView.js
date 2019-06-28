@@ -3,7 +3,7 @@ class ColorPickerView {
     this.colorPicker = document.createElement('div');
     this.numColor = numColor;
     this.stylePaletteColor = stylePaletteColor;
-    this.currentColor = 'black';
+    this.currentColor = `rgb(${0}, ${0}, ${0})`;
   }
 
   init(parent) {

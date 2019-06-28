@@ -4,6 +4,7 @@ import FrameBar from './FrameBar';
 import { AnimationView, DrawView } from './CanvasView';
 import PenUnit from './PenUnit';
 import CanvasSize from './CanvasSize';
+import Tools from './Tools';
 
 class AppView {
   constructor() {
@@ -17,6 +18,7 @@ class AppView {
     this.animationViewer = '';
     this.penUnit = '';
     this.canvasSize = '';
+    this.tools = '';
   }
 
   addCommonInterface() {
@@ -27,6 +29,10 @@ class AppView {
     this.penUnit = new PenUnit(this);
     this.penUnit.init(this.toolSection);
     this.penUnit.addListeners();
+    // tools
+    this.tools = new Tools(this);
+    this.tools.init(this.toolSection);
+    this.tools.addListeners();
     // color-picker-tool
     const colorPicker = new ColorPickerView(3, 'button');
     colorPicker.init(this.toolSection);
@@ -37,7 +43,8 @@ class AppView {
     frameBar.init(this.frameSection);
     // draw-section
     this.drawSection.classList.add('draw-section');
-    this.drawViewer = new DrawView(this, colorPicker, 500, 500);
+    this.drawViewer = new DrawView(this, colorPicker, 512, 512);
+    // this.drawViewer = new DrawView(this, colorPicker, 500, 500);
     this.drawViewer.init(this.drawSection);
     this.drawViewer.addListeners();
     this.canvasSize = new CanvasSize(this);

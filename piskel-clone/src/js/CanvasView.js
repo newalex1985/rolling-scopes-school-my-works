@@ -1,3 +1,5 @@
+import PaintBucket from './PaintBucket';
+
 class AnimationView {
   constructor(width, heigth) {
     this.area = document.createElement('canvas');
@@ -49,19 +51,22 @@ class DrawView extends AnimationView {
     this.canvasResolution = 32;
     this.primitivePositions = this.getPrimitivePositions();
     this.penUnit = 1;
+    this.tool = 'pen';
+    this.paintBucket = new PaintBucket(this.context);
   }
 
   init(parrent) {
     super.init(parrent);
     this.area.style.position = 'relative';
     this.area.style.zIndex = 10;
-    // this.context.lineCap = 'square';
-    // this.context.lineWidth = this.sizeArea.width / this.canvasResolution;
-    // lineWidth?
     this.positioner = document.createElement('div');
     this.positioner.classList.add('positioner');
     this.positioner.style.width = `${(this.sizeArea.width / this.canvasResolution) * this.penUnit}px`;
     this.positioner.style.height = `${(this.sizeArea.heigth / this.canvasResolution) * this.penUnit}px`;
+    // eslint-disable-next-line max-len
+    // this.positioner.style.width = `${Math.floor(this.sizeArea.width / this.canvasResolution) * this.penUnit}px`;
+    // eslint-disable-next-line max-len
+    // this.positioner.style.height = `${Math.floor(this.sizeArea.heigth / this.canvasResolution) * this.penUnit}px`;
     this.positioner.style.position = 'absolute';
     this.positioner.style.top = 0;
     this.positioner.style.left = 0;
@@ -75,15 +80,27 @@ class DrawView extends AnimationView {
 
   drawPrimitive(x, y) {
     const indexPrimitive = this.findPrimitive(x, y);
+    // console.log('indexPrimitive x y', indexPrimitive, x, y);
+    if (indexPrimitive !== undefined) {
+      const {
+        xBegin, yBegin, xEnd, yEnd,
+      } = this.getPrimitiveCoord(indexPrimitive);
+      const width = (xEnd - xBegin) * this.penUnit;
+      const height = (yEnd - yBegin) * this.penUnit;
+      this.context.fillRect(xBegin, yBegin, width, height);
+    }
+  }
+
+  clearPrimitive(x, y) {
+    const indexPrimitive = this.findPrimitive(x, y);
     console.log('indexPrimitive', indexPrimitive);
     if (indexPrimitive !== undefined) {
       const {
         xBegin, yBegin, xEnd, yEnd,
-      } = this.primitivePositions[indexPrimitive];
+      } = this.getPrimitiveCoord(indexPrimitive);
       const width = (xEnd - xBegin) * this.penUnit;
       const height = (yEnd - yBegin) * this.penUnit;
-      this.context.strokeRect(xBegin, yBegin, width, height);
-      this.context.fillRect(xBegin, yBegin, width, height);
+      this.context.clearRect(xBegin, yBegin, width, height);
     }
   }
 
@@ -95,6 +112,10 @@ class DrawView extends AnimationView {
     const primitivePisitions = [];
     const width = this.sizeArea.width / this.canvasResolution;
     const heigth = this.sizeArea.heigth / this.canvasResolution;
+    // const width = Math.floor(10 * this.sizeArea.width / this.canvasResolution) / 10;
+    // const heigth = Math.floor(10 * this.sizeArea.heigth / this.canvasResolution) / 10;
+    // const width = Math.floor(this.sizeArea.width / this.canvasResolution);
+    // const heigth = Math.floor(this.sizeArea.heigth / this.canvasResolution);
     for (let i = 0; i < this.canvasResolution; i += 1) {
       for (let j = 0; j < this.canvasResolution; j += 1) {
         primitivePisitions.push({
@@ -109,21 +130,51 @@ class DrawView extends AnimationView {
   }
 
   findPrimitive(x, y) {
-    let num;
-    this.primitivePositions.forEach((elem, index) => {
-      if ((x > elem.xBegin) && (x < elem.xEnd) && (y > elem.yBegin) && (y < elem.yEnd)) {
-        num = index;
-      }
-    });
-    return num;
+    const { width, heigth } = this.sizeArea;
+    const res = this.canvasResolution;
+    return Math.floor(x / (width / res)) + Math.floor(y / (heigth / res)) * res;
+  }
+
+  getPrimitiveCoord(indexPrimitive) {
+    let {
+      xBegin, xEnd, yBegin, yEnd,
+    } = this.primitivePositions[indexPrimitive];
+    const width = xEnd - xBegin;
+    const height = yEnd - yBegin;
+    if ((this.sizeArea.width - xBegin) < width * this.penUnit) {
+      xBegin = this.sizeArea.width - width * this.penUnit;
+      xEnd = xBegin + width * this.penUnit;
+    }
+    if ((this.sizeArea.heigth - yBegin) < height * this.penUnit) {
+      yBegin = this.sizeArea.heigth - height * this.penUnit;
+      yEnd = yBegin + height * this.penUnit;
+    }
+    return {
+      xBegin, xEnd, yBegin, yEnd,
+    };
+  }
+
+  getCanvasCoord(e) {
+    let x = e.offsetX;
+    let y = e.offsetY;
+    if (x < 0) {
+      x = 0;
+    } else if (x > this.sizeArea.width - 1) {
+      x = this.sizeArea.width - 1;
+    }
+    if (y < 0) {
+      y = 0;
+    } else if (y > this.sizeArea.heigth - 1) {
+      y = this.sizeArea.heigth - 1;
+    }
+    return { x, y };
   }
 
   movePositioner(x, y) {
     const indexPrimitive = this.findPrimitive(x, y);
+    // console.log('indexPrimitive x y', indexPrimitive, x, y);
     if (indexPrimitive !== undefined) {
-      const {
-        xBegin, yBegin,
-      } = this.primitivePositions[indexPrimitive];
+      const { xBegin, yBegin } = this.getPrimitiveCoord(indexPrimitive);
       this.positioner.style.left = `${xBegin}px`;
       this.positioner.style.top = `${yBegin}px`;
     }
@@ -136,10 +187,10 @@ class DrawView extends AnimationView {
 
   addListeners() {
     this.area.addEventListener('mousemove', (e) => {
-      const x = e.offsetX;
-      const y = e.offsetY;
+      const { x, y } = this.getCanvasCoord(e);
+
       if (e.buttons > 0) {
-        console.log('move');
+        // console.log('move x y', x, y);
         this.context.fillStyle = this.colorPickerLink.currentColor;
         this.drawPrimitive(x, y);
       }
@@ -148,11 +199,21 @@ class DrawView extends AnimationView {
 
     this.area.addEventListener('mousedown', (e) => {
       console.log('downMouse');
-      const x = e.offsetX;
-      const y = e.offsetY;
-      this.context.strokeStyle = this.colorPickerLink.currentColor;
-      this.context.fillStyle = this.colorPickerLink.currentColor;
-      this.drawPrimitive(x, y);
+      console.log('this.colorPickerLink.currentColor', this.colorPickerLink.currentColor);
+      const { x, y } = this.getCanvasCoord(e);
+      const { tool } = this;
+      if (tool === 'pen') {
+        this.context.strokeStyle = this.colorPickerLink.currentColor;
+        this.context.fillStyle = this.colorPickerLink.currentColor;
+        this.drawPrimitive(x, y);
+      } else if (tool === 'fill') {
+        console.log(this.colorPickerLink.currentColor.match(/\d+/g));
+        // this.paintBucket.floodFill(x, y, [255, 0, 0, 255]);
+        // this.paintBucket.floodFill(x, y, [255, 0, 0]);
+        this.paintBucket.floodFill(x, y, this.colorPickerLink.currentColor.match(/\d+/g));
+      } else if (tool === 'eraser') {
+        this.clearPrimitive(x, y);
+      }
     });
   }
 }
