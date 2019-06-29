@@ -16,12 +16,24 @@ class Tools {
     Tools.createFontAwesome(tool, 'fas', 'fa-pen');
 
     tool = Tools.createButton(this.tools, { styleButton, nameButton });
+    tool.setAttribute('data-tool', 'line');
+    Tools.createFontAwesome(tool, 'fas', 'fa-slash');
+
+    tool = Tools.createButton(this.tools, { styleButton, nameButton });
     tool.setAttribute('data-tool', 'fill');
     Tools.createFontAwesome(tool, 'fas', 'fa-fill-drip');
 
     tool = Tools.createButton(this.tools, { styleButton, nameButton });
+    tool.setAttribute('data-tool', 'square');
+    Tools.createFontAwesome(tool, 'fas', 'fa-square-full');
+
+    tool = Tools.createButton(this.tools, { styleButton, nameButton });
     tool.setAttribute('data-tool', 'eraser');
     Tools.createFontAwesome(tool, 'fas', 'fa-eraser');
+
+    tool = Tools.createButton(this.tools, { styleButton, nameButton });
+    tool.setAttribute('data-tool', 'circle');
+    Tools.createFontAwesome(tool, 'fas', 'fa-circle');
 
     parent.appendChild(this.tools);
 
@@ -48,13 +60,25 @@ class Tools {
             drawViewer.tool = 'pen';
             indexTool = 0;
             break;
+          case 'line':
+            drawViewer.tool = 'line';
+            indexTool = 1;
+            break;
           case 'fill':
             drawViewer.tool = 'fill';
-            indexTool = 1;
+            indexTool = 2;
+            break;
+          case 'square':
+            drawViewer.tool = 'square';
+            indexTool = 3;
             break;
           case 'eraser':
             drawViewer.tool = 'eraser';
-            indexTool = 2;
+            indexTool = 4;
+            break;
+          case 'circle':
+            drawViewer.tool = 'circle';
+            indexTool = 5;
             break;
           default:
             drawViewer.tool = 'pen';

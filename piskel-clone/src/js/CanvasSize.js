@@ -2,6 +2,7 @@ class CanvasSize {
   constructor(linkAppView) {
     this.linkAppView = linkAppView;
     this.canvasSize = document.createElement('div');
+    this.coordShowArea = document.createElement('div');
   }
 
   init(parent) {
@@ -20,6 +21,9 @@ class CanvasSize {
     nameButton = '128x128';
     size = CanvasSize.createButton(this.canvasSize, { styleButton, nameButton });
     size.setAttribute('data-size', '128');
+
+    this.coordShowArea.classList.add('coord-show-area');
+    this.canvasSize.appendChild(this.coordShowArea);
 
     parent.appendChild(this.canvasSize);
 

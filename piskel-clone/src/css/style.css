@@ -32,19 +32,23 @@
 
 .tools-box {
   border: 1px solid;
-  /* display: flex; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .tool {
   box-sizing: border-box;
   border: 1px solid;
-  width: 55px;
-  height: 55px;
+  width: 59px;
+  height: 59px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: beige;
   color: #4e494aed;
+  margin: 1px;
 }
 
 .tool:hover {
@@ -209,6 +213,12 @@
   opacity: 0.8;
 }
 
-.canvas-size-active{
+.canvas-size-active {
   background-color: chocolate;
 }
+
+/* .coord-show-area {
+  width: 20px;
+  height: 20px;
+  border: 1px solid;
+} */
