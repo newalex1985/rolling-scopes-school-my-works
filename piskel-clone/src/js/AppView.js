@@ -3,7 +3,8 @@ import ColorPickerView from './ColorPickerView';
 import FrameBar from './FrameBar';
 import { AnimationView, DrawView } from './CanvasView';
 import PenUnit from './PenUnit';
-import CanvasSize from './CanvasSize';
+import CanvasControlPanel from './CanvasControlPanel';
+import AnimationControlPanel from './AnimationControlPanel';
 import Tools from './Tools';
 
 class AppView {
@@ -17,8 +18,10 @@ class AppView {
     this.drawViewer = '';
     this.animationViewer = '';
     this.penUnit = '';
-    this.canvasSize = '';
+    this.canvasControlPanel = '';
+    this.animationControlPanel = '';
     this.tools = '';
+    this.frameBar = '';
   }
 
   addCommonInterface() {
@@ -39,24 +42,26 @@ class AppView {
     colorPicker.addListeners();
     // frame-section
     this.frameSection.classList.add('frame-section');
-    const frameBar = new FrameBar();
-    frameBar.init(this.frameSection);
+    this.frameBar = new FrameBar(this);
+    this.frameBar.init(this.frameSection);
     // draw-section
     this.drawSection.classList.add('draw-section');
     this.drawViewer = new DrawView(this, colorPicker, 512, 512);
-    // this.drawViewer = new DrawView(this, colorPicker, 500, 500);
     this.drawViewer.init(this.drawSection);
     this.drawViewer.addListeners();
-    this.canvasSize = new CanvasSize(this);
-    this.canvasSize.init(this.drawSection);
-    this.canvasSize.addListeners();
+    this.canvasControlPanel = new CanvasControlPanel(this);
+    this.canvasControlPanel.init(this.drawSection);
+    this.canvasControlPanel.addListeners();
     // animation-section
     this.animationSection.classList.add('animation-section');
-    this.animationViewer = new AnimationView(500, 500);
+    this.animationViewer = new AnimationView(512, 512);
     this.animationViewer.init(this.animationSection);
+    this.animationControlPanel = new AnimationControlPanel(this);
+    this.animationControlPanel.init(this.animationSection);
+    this.animationControlPanel.addListeners();
 
-    frameBar.animationViewLink = this.animationViewer;
-    frameBar.addListeners();
+    this.frameBar.animationViewLink = this.animationViewer;
+    this.frameBar.addListeners();
 
     this.commonContainer.appendChild(this.toolSection);
     this.commonContainer.appendChild(this.frameSection);
@@ -64,7 +69,7 @@ class AppView {
     this.commonContainer.appendChild(this.animationSection);
     this.root.appendChild(this.commonContainer);
 
-    frameBar.bindingCanvas(this.drawViewer);
+    this.frameBar.bindingCanvas(this.drawViewer);
   }
 }
 

@@ -69,6 +69,7 @@ class PenUnit {
         }
         this.makePenActive(indexPen);
         drawViewer.resizePositioner();
+        this.linkAppView.canvasControlPanel.coordShowArea.children[1].innerText = `Pen unit: ${drawViewer.penUnit}`;
       }
     });
   }

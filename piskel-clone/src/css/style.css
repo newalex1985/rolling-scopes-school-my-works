@@ -15,11 +15,6 @@
   border: solid 1px #ff0;
 }
 
-.tool-section, .frame-section, .animation-section {
-  border: solid 1px #aaa;
-  cursor: default;
-}
-
 .draw-section {
   border: solid 1px #aaa;
   cursor: default;
@@ -28,6 +23,8 @@
 
 .tool-section {
   width: 125px;
+  border: solid 1px #aaa;
+  cursor: default;
 }
 
 .tools-box {
@@ -94,17 +91,33 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: solid 1px;
+  border: solid 1px #aaa;
+  cursor: default;
 }
 
-.clear, .add-frame, .start-stop-animation, .full-screen {
+.clear, .add-frame {
   background: #eee;
   color: #777;
   width: 130px;
   text-align: center;
-  margin: 10px auto;
+  margin: 7px auto;
   cursor: pointer;
   border: 1px solid;
+}
+
+.start-stop-animation, .full-screen {
+  background: #eee;
+  width: 130px;
+  text-align: center;
+  /* margin: 7px auto; */
+  cursor: pointer;
+  border: 1px solid #777;
+  height: 23px;
+  color: #472f2f;
+}
+
+.start-stop-animation:hover, .full-screen:hover {
+  background-color: #aaa;
 }
 
 .common-container {
@@ -168,11 +181,16 @@
   display:flex;
   justify-content: space-around;
   background: #eee;
-  color: #777;
+  color: #472f2f;;
   width: 130px;
-  margin: 10px auto;
+  /* margin: 10px auto; */
   cursor: pointer;
-  border: 1px solid;
+  border: 1px solid #777;
+  height: 23px;
+}
+
+.fps:hover {
+  background-color: #aaa;
 }
 
 .fps-up, .fps-down, .fps-value {
@@ -189,6 +207,11 @@
 
 .positioner {
   border: 1px dotted;
+}
+
+.canvas-control-panel {
+  border: 1px solid;
+  display: flex;
 }
 
 .canvas-size-box {
@@ -217,8 +240,31 @@
   background-color: chocolate;
 }
 
-/* .coord-show-area {
-  width: 20px;
-  height: 20px;
+.coord-show-area {
+  width: 150px;
+  height: 75px;
   border: 1px solid;
-} */
+  font-size: large;
+  background-color: burlywood;
+}
+
+.box-show-area {
+  margin: 3px;
+}
+
+.animation-section {
+  border: solid 1px #aaa;
+  cursor: default;
+}
+
+.animation-section canvas {
+  border: 1px solid;
+}
+
+.animation-control-panel {
+  border: 1px solid;
+  display: flex;
+  height: 76px;
+  justify-content: space-around;
+  align-items: center;
+}

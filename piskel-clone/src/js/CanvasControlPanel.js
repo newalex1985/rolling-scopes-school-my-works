@@ -1,31 +1,44 @@
-class CanvasSize {
+class CanvasControlPanel {
   constructor(linkAppView) {
     this.linkAppView = linkAppView;
+    this.canvasControlPanel = document.createElement('div');
     this.canvasSize = document.createElement('div');
     this.coordShowArea = document.createElement('div');
   }
 
   init(parent) {
+    this.canvasControlPanel.classList.add('canvas-control-panel');
     this.canvasSize.classList.add('canvas-size-box');
 
     const styleButton = 'canvas-size-but';
     let nameButton = '32x32';
 
-    let size = CanvasSize.createButton(this.canvasSize, { styleButton, nameButton });
+    let size = CanvasControlPanel.createButton(this.canvasSize, { styleButton, nameButton });
     size.setAttribute('data-size', '32');
 
     nameButton = '64x64';
-    size = CanvasSize.createButton(this.canvasSize, { styleButton, nameButton });
+    size = CanvasControlPanel.createButton(this.canvasSize, { styleButton, nameButton });
     size.setAttribute('data-size', '64');
 
     nameButton = '128x128';
-    size = CanvasSize.createButton(this.canvasSize, { styleButton, nameButton });
+    size = CanvasControlPanel.createButton(this.canvasSize, { styleButton, nameButton });
     size.setAttribute('data-size', '128');
 
-    this.coordShowArea.classList.add('coord-show-area');
-    this.canvasSize.appendChild(this.coordShowArea);
+    this.canvasControlPanel.appendChild(this.canvasSize);
 
-    parent.appendChild(this.canvasSize);
+    this.coordShowArea.classList.add('coord-show-area');
+    const coord = document.createElement('div');
+    coord.classList.add('box-show-area');
+    this.coordShowArea.appendChild(coord);
+    const penUnit = document.createElement('div');
+    penUnit.classList.add('box-show-area');
+    this.coordShowArea.appendChild(penUnit);
+    const tool = document.createElement('div');
+    tool.classList.add('box-show-area');
+    this.coordShowArea.appendChild(tool);
+    this.canvasControlPanel.appendChild(this.coordShowArea);
+
+    parent.appendChild(this.canvasControlPanel);
 
     this.makeSizeActive(0);
   }
@@ -78,4 +91,4 @@ class CanvasSize {
   }
 }
 
-export default CanvasSize;
+export default CanvasControlPanel;

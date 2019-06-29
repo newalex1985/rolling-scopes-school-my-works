@@ -1,22 +1,15 @@
-import FpsBar from './FpsBar';
 import Frame from './Frame';
 
 class FrameBar {
-  constructor() {
+  constructor(linkAppView) {
+    this.linkAppView = linkAppView;
     this.frameBar = document.createElement('div');
     this.clearButton = '';
     this.addFrameButton = '';
-    this.startStopAnimationButton = '';
-    this.fullScreenButton = '';
     this.framesArea = document.createElement('div');
-    this.fpsBarLink = '';
     this.drawViewLink = '';
     this.animationViewLink = '';
     this.frames = [];
-    this.animationSetting = {
-      state: 'stop',
-      timerId: '',
-    };
     this.timerIdFramePreview = '';
   }
 
@@ -28,19 +21,6 @@ class FrameBar {
     styleButton = 'add-frame';
     nameButton = 'Add frame';
     this.addFrameButton = FrameBar.createButton(this.frameBar, { styleButton, nameButton });
-
-    styleButton = 'start-stop-animation';
-    nameButton = 'Start/stop animation';
-    // eslint-disable-next-line max-len
-    this.startStopAnimationButton = FrameBar.createButton(this.frameBar, { styleButton, nameButton });
-
-    styleButton = 'full-screen';
-    nameButton = 'Full screen';
-    this.fullScreenButton = FrameBar.createButton(this.frameBar, { styleButton, nameButton });
-
-    this.fpsBarLink = new FpsBar('fps');
-    this.fpsBarLink.init(this.frameBar);
-    this.fpsBarLink.addListeners();
 
     this.framesArea.classList.add('frames-area');
     this.frameBar.appendChild(this.framesArea);
@@ -134,33 +114,6 @@ class FrameBar {
       this.frames.push(frameContent);
       this.drawViewLink.indexCurrentFrame = this.frames.length - 1;
       this.makeFrameActive(this.drawViewLink.indexCurrentFrame);
-    });
-  }
-
-  addStartStopAnimationButtonListener() {
-    this.startStopAnimationButton.addEventListener('click', () => {
-      if (this.animationSetting.state === 'stop') {
-        this.animationSetting.state = 'start';
-        let count = 0;
-        this.animationSetting.timerId = setInterval(() => {
-          const frameData = this.frames[count];
-          this.animationViewLink.draw(frameData);
-          count += 1;
-          if (count === this.frames.length) {
-            count = 0;
-          }
-        }, 1000 / this.fpsBarLink.fpsValue);
-      } else {
-        this.animationSetting.state = 'stop';
-        clearInterval(this.animationSetting.timerId);
-        this.animationViewLink.draw();
-      }
-    });
-  }
-
-  addFullScreenButtonListener() {
-    this.fullScreenButton.addEventListener('click', () => {
-      this.animationViewLink.fullScreenMode();
     });
   }
 
@@ -344,8 +297,6 @@ class FrameBar {
   addListeners() {
     this.addClearButtonListener();
     this.addAddFrameButtonListener();
-    this.addStartStopAnimationButtonListener();
-    this.addFullScreenButtonListener();
     this.addframesAreaListeners();
   }
 

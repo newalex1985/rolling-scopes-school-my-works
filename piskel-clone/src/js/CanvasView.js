@@ -185,6 +185,20 @@ class DrawView extends AnimationView {
     }
   }
 
+  showCoordOnCanvas(x, y) {
+    let xCoord = 0;
+    let yCoord = 0;
+    const indexPrimitive = this.findPrimitive(x, y);
+    if (indexPrimitive !== undefined) {
+      const coord = DrawView.calculatePrimitivePos(indexPrimitive, this.canvasResolution);
+      xCoord = coord.x;
+      yCoord = coord.y;
+    }
+    this.linkAppView.canvasControlPanel.coordShowArea.children[0].innerText = `Coords: ${xCoord}:${yCoord}`;
+    this.linkAppView.canvasControlPanel.coordShowArea.children[1].innerText = `Pen unit: ${this.penUnit}`;
+    this.linkAppView.canvasControlPanel.coordShowArea.children[2].innerText = `Tool: ${this.tool}`;
+  }
+
   resizePositioner() {
     this.positioner.style.width = `${(this.sizeArea.width / this.canvasResolution) * this.penUnit}px`;
     this.positioner.style.height = `${(this.sizeArea.heigth / this.canvasResolution) * this.penUnit}px`;
@@ -386,6 +400,7 @@ class DrawView extends AnimationView {
         }
       }
       this.movePositioner(x, y);
+      this.showCoordOnCanvas(x, y);
     });
 
     this.area.addEventListener('mousedown', (e) => {

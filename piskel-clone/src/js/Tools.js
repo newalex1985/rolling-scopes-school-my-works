@@ -85,6 +85,7 @@ class Tools {
             indexTool = 0;
         }
         this.makeToolActive(indexTool);
+        this.linkAppView.canvasControlPanel.coordShowArea.children[2].innerText = `Tool: ${drawViewer.tool}`;
       }
     });
   }
