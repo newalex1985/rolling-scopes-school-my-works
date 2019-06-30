@@ -127,7 +127,7 @@
 
 .frames-area {
   width: 150px;
-  height: 430px;
+  height: 530px;
   overflow: auto;
   /* position: relative; */
   /* border: 1px solid */
@@ -267,4 +267,31 @@
   height: 76px;
   justify-content: space-around;
   align-items: center;
+}
+
+.file-area {
+  border: 1px solid;
+  width: 100px;
+  height: 75px;
+  background-color: #686562;
+}
+
+.file-area input[type=file] {
+  display: none;
+}
+
+.file-button {
+  text-decoration: none;
+  display: block;
+  border: 1px solid;
+  text-align: center;
+  color: black;
+  background-color: beige;
+  cursor: default;
+  margin: 10px auto;
+  width: 80px;
+}
+
+.file-button:hover {
+  opacity: 0.8;
 }

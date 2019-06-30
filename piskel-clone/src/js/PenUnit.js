@@ -40,36 +40,36 @@ class PenUnit {
     this.penUnit.children[indexPen].classList.add('unit-pen-active');
   }
 
+  choisePen(penUnit) {
+    const { drawViewer } = this.linkAppView;
+    drawViewer.penUnit = penUnit;
+    this.makePenActive(penUnit - 1);
+    drawViewer.resizePositioner();
+    this.linkAppView.canvasControlPanel.coordShowArea.children[1].innerText = `Pen unit: ${drawViewer.penUnit}`;
+  }
+
   addListeners() {
     this.penUnit.addEventListener('click', (e) => {
       if (e.target.hasAttribute('data-unit')) {
         const { unit } = e.target.dataset;
-        const { drawViewer } = this.linkAppView;
-        let indexPen = 0;
+        let penUnit = 1;
         switch (unit) {
           case 'one':
-            drawViewer.penUnit = 1;
-            indexPen = 0;
+            penUnit = 1;
             break;
           case 'two':
-            drawViewer.penUnit = 2;
-            indexPen = 1;
+            penUnit = 2;
             break;
           case 'three':
-            drawViewer.penUnit = 3;
-            indexPen = 2;
+            penUnit = 3;
             break;
           case 'four':
-            drawViewer.penUnit = 4;
-            indexPen = 3;
+            penUnit = 4;
             break;
           default:
-            drawViewer.penUnit = 1;
-            indexPen = 0;
+            penUnit = 1;
         }
-        this.makePenActive(indexPen);
-        drawViewer.resizePositioner();
-        this.linkAppView.canvasControlPanel.coordShowArea.children[1].innerText = `Pen unit: ${drawViewer.penUnit}`;
+        this.choisePen(penUnit);
       }
     });
   }

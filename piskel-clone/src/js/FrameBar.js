@@ -94,6 +94,25 @@ class FrameBar {
     this.drawViewLink.draw(frameData);
   }
 
+  rewriteFrames(frames) {
+    this.frames.length = 0;
+    const frameCards = this.framesArea.children;
+    const frameCardsArray = Array.prototype.slice.call(frameCards);
+    frameCardsArray.forEach((elem) => {
+      elem.remove();
+    });
+    frames.forEach((elem) => {
+      const frameContent = elem;
+      this.drawViewLink.draw(frameContent);
+      const frame = new Frame(frameContent);
+      frame.add(this.framesArea, this.frames.length + 1);
+      frame.fillContent(frameContent);
+      this.frames.push(frameContent);
+      this.drawViewLink.indexCurrentFrame = this.frames.length - 1;
+      this.makeFrameActive(this.drawViewLink.indexCurrentFrame);
+    });
+  }
+
   addClearButtonListener() {
     this.clearButton.addEventListener('click', () => {
       this.drawViewLink.draw();

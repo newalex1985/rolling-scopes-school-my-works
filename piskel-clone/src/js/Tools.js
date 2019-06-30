@@ -2,7 +2,7 @@ class Tools {
   constructor(linkAppView) {
     this.linkAppView = linkAppView;
     this.tools = document.createElement('div');
-    this.toolsState = 'pen';
+    this.indexTool = 0;
   }
 
   init(parent) {
@@ -49,43 +49,50 @@ class Tools {
     this.tools.children[indexTool].classList.add('tool-active');
   }
 
+  choiceTool(indexTool, tool) {
+    this.indexTool = indexTool;
+    const { drawViewer } = this.linkAppView;
+    drawViewer.tool = tool;
+    this.makeToolActive(this.indexTool);
+    this.linkAppView.canvasControlPanel.coordShowArea.children[2].innerText = `Tool: ${drawViewer.tool}`;
+  }
+
   addListeners() {
     this.tools.addEventListener('click', (e) => {
       if (e.target.hasAttribute('data-tool')) {
         const { tool } = e.target.dataset;
-        const { drawViewer } = this.linkAppView;
+        let selectedTool = 'pen';
         let indexTool = 0;
         switch (tool) {
           case 'pen':
-            drawViewer.tool = 'pen';
+            selectedTool = tool;
             indexTool = 0;
             break;
           case 'line':
-            drawViewer.tool = 'line';
+            selectedTool = tool;
             indexTool = 1;
             break;
           case 'fill':
-            drawViewer.tool = 'fill';
+            selectedTool = tool;
             indexTool = 2;
             break;
           case 'square':
-            drawViewer.tool = 'square';
+            selectedTool = tool;
             indexTool = 3;
             break;
           case 'eraser':
-            drawViewer.tool = 'eraser';
+            selectedTool = tool;
             indexTool = 4;
             break;
           case 'circle':
-            drawViewer.tool = 'circle';
+            selectedTool = tool;
             indexTool = 5;
             break;
           default:
-            drawViewer.tool = 'pen';
+            selectedTool = 'pen';
             indexTool = 0;
         }
-        this.makeToolActive(indexTool);
-        this.linkAppView.canvasControlPanel.coordShowArea.children[2].innerText = `Tool: ${drawViewer.tool}`;
+        this.choiceTool(indexTool, selectedTool);
       }
     });
   }
