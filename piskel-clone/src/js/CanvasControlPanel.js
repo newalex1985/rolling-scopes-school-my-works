@@ -81,6 +81,28 @@ class CanvasControlPanel {
     drawViewer.resizePositioner();
   }
 
+  getSaveObjectJSON() {
+    const { drawViewer, tools } = this.linkAppView;
+    const saveObject = {
+      penUnit: drawViewer.penUnit,
+      toolParam: { tool: drawViewer.tool, indexTool: tools.indexTool },
+      sizeParam: { resolution: drawViewer.canvasResolution, indexSize: this.indexSize },
+      frames: this.linkAppView.frameBar.frames,
+    };
+    const saveObjectJSON = JSON.stringify(saveObject);
+    return saveObjectJSON;
+  }
+
+  restoreStateApp(saveObjectJSON) {
+    const saveObject = JSON.parse(saveObjectJSON);
+    const { penUnit, tools, frameBar } = this.linkAppView;
+    penUnit.choisePen(saveObject.penUnit);
+    const { toolParam, sizeParam } = saveObject;
+    tools.choiceTool(toolParam.indexTool, toolParam.tool);
+    this.choiceSize(sizeParam.indexSize, sizeParam.resolution);
+    frameBar.rewriteFrames(saveObject.frames);
+  }
+
   addListeners() {
     this.canvasSize.addEventListener('click', (e) => {
       if (e.target.hasAttribute('data-size')) {
@@ -115,12 +137,7 @@ class CanvasControlPanel {
         const reader = new FileReader();
         reader.addEventListener('loadend', (event) => {
           const saveObjectJSON = event.target.result;
-          const saveObject = JSON.parse(saveObjectJSON);
-          this.linkAppView.penUnit.choisePen(saveObject.penUnit);
-          const { toolParam, sizeParam } = saveObject;
-          this.linkAppView.tools.choiceTool(toolParam.indexTool, toolParam.tool);
-          this.choiceSize(sizeParam.indexSize, sizeParam.resolution);
-          this.linkAppView.frameBar.rewriteFrames(saveObject.frames);
+          this.restoreStateApp(saveObjectJSON);
         });
         reader.addEventListener('error', () => {
           alert('Error reading file!');
@@ -132,20 +149,10 @@ class CanvasControlPanel {
     });
 
     this.saveElem.addEventListener('click', () => {
-      const { drawViewer, tools } = this.linkAppView;
-      const saveObject = {
-        penUnit: drawViewer.penUnit,
-        toolParam: { tool: drawViewer.tool, indexTool: tools.indexTool },
-        sizeParam: { resolution: drawViewer.canvasResolution, indexSize: this.indexSize },
-        frames: this.linkAppView.frameBar.frames,
-      };
-
-      const saveObjectJSON = JSON.stringify(saveObject);
-
+      const saveObjectJSON = this.getSaveObjectJSON();
       const blob = new Blob([saveObjectJSON], { type: 'text/plain' });
       this.saveElem.href = URL.createObjectURL(blob);
       this.saveElem.download = 'file';
-
       // event.preventDefault();
     });
   }

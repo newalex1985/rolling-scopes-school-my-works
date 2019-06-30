@@ -22,6 +22,7 @@ class AppView {
     this.animationControlPanel = '';
     this.tools = '';
     this.frameBar = '';
+    this.linkAppView = this;
   }
 
   addCommonInterface() {
@@ -70,6 +71,17 @@ class AppView {
     this.root.appendChild(this.commonContainer);
 
     this.frameBar.bindingCanvas(this.drawViewer);
+  }
+
+  initSession() {
+    const saveObjectJSONRestore = localStorage.getItem('saveObjectJSON');
+    if (saveObjectJSONRestore !== null) {
+      this.linkAppView.canvasControlPanel.restoreStateApp(saveObjectJSONRestore);
+    }
+    window.addEventListener('unload', () => {
+      const saveObjectJSONStore = this.linkAppView.canvasControlPanel.getSaveObjectJSON();
+      localStorage.setItem('saveObjectJSON', saveObjectJSONStore);
+    });
   }
 }
 

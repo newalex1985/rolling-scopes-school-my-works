@@ -8,6 +8,7 @@ class App {
   start() {
     this.viewer = new AppView();
     this.viewer.addCommonInterface();
+    this.viewer.initSession();
   }
 }
 
