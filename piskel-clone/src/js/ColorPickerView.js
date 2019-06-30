@@ -21,9 +21,6 @@ class ColorPickerView {
           const paletteColor = document.createElement('div');
           paletteColor.classList.add(stylePaletteColor);
           paletteColor.setAttribute('paletteColor', true);
-          // const rCh = Math.round(r * 255 / (numColor - 1));
-          // const gCh = Math.round(g * 255 / (numColor - 1));
-          // const bCh = Math.round(b * 255 / (numColor - 1));
           const rCh = Math.round(r * 255 / (numColor - 1));
           const gCh = Math.round(g * 255 / (numColor - 1));
           const bCh = Math.round(b * 255 / (numColor - 1));

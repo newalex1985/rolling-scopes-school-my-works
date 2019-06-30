@@ -42,10 +42,10 @@ class AnimationView {
 }
 
 class DrawView extends AnimationView {
-  constructor(linkAppView, colorPickerLink, width, heigth) {
+  constructor(linkAppView, width, heigth) {
     super(width, heigth);
     this.linkAppView = linkAppView;
-    this.colorPickerLink = colorPickerLink;
+    // this.colorPickerLink = colorPickerLink;
     this.indexCurrentFrame = '';
     this.emptyContent = '';
     this.canvasResolution = 32;
@@ -347,6 +347,17 @@ class DrawView extends AnimationView {
     this.yStop = coord.y;
   }
 
+  choiceColor(numButton) {
+    const { colorChoicer } = this.linkAppView;
+    let color = colorChoicer.curentColorL;
+    if (numButton === 1) {
+      color = colorChoicer.curentColorL;
+    } else if (numButton === 2) {
+      color = colorChoicer.curentColorR;
+    }
+    return color;
+  }
+
   addListeners() {
     this.area.addEventListener('mousemove', (e) => {
       const { x, y } = this.getCanvasCoord(e);
@@ -354,7 +365,8 @@ class DrawView extends AnimationView {
       if (e.buttons > 0) {
         const indexPrimitive = this.findPrimitive(x, y);
         if (tool === 'pen') {
-          this.context.fillStyle = this.colorPickerLink.currentColor;
+          // this.context.fillStyle = this.colorPickerLink.currentColor;
+          this.context.fillStyle = this.choiceColor(e.buttons);
           this.drawPrimitive(x, y);
         } else if (tool === 'line') {
           if (indexPrimitive !== undefined) {
@@ -363,7 +375,8 @@ class DrawView extends AnimationView {
               xStart, yStart, xStop, yStop,
             } = this;
             this.clearPrimitiveLoacal();
-            this.context.fillStyle = this.colorPickerLink.currentColor;
+            // this.context.fillStyle = this.colorPickerLink.currentColor;
+            this.context.fillStyle = this.choiceColor(e.buttons);
             this.arrayPrimitiveCoordToClear = this.lineBresenham(xStart, yStart, xStop, yStop);
           }
         } else if (tool === 'circle') {
@@ -380,7 +393,8 @@ class DrawView extends AnimationView {
             threshold = Math.min(this.canvasResolution - yStart, yStart);
             radius = Math.min(radius, threshold);
             this.clearPrimitiveLoacal();
-            this.context.fillStyle = this.colorPickerLink.currentColor;
+            // this.context.fillStyle = this.colorPickerLink.currentColor;
+            this.context.fillStyle = this.choiceColor(e.buttons);
             this.arrayPrimitiveCoordToClear = this.circleBresenham(xStart, yStart, radius);
           }
         } else if (tool === 'square') {
@@ -392,7 +406,8 @@ class DrawView extends AnimationView {
             const width = xStop - xStart;
             const height = yStop - yStart;
             this.clearPrimitiveLoacal();
-            this.context.fillStyle = this.colorPickerLink.currentColor;
+            // this.context.fillStyle = this.colorPickerLink.currentColor;
+            this.context.fillStyle = this.choiceColor(e.buttons);
             this.arrayPrimitiveCoordToClear = this.square(xStart, yStart, width, height);
           }
         } else if (tool === 'eraser') {
@@ -405,13 +420,14 @@ class DrawView extends AnimationView {
 
     this.area.addEventListener('mousedown', (e) => {
       console.log('downMouse');
-      console.log('this.colorPickerLink.currentColor', this.colorPickerLink.currentColor);
+      // console.log('this.colorPickerLink.currentColor', this.colorPickerLink.currentColor);
       const { x, y } = this.getCanvasCoord(e);
       const { tool } = this;
       const indexPrimitive = this.findPrimitive(x, y);
       if (tool === 'pen') {
         // this.context.strokeStyle = this.colorPickerLink.currentColor;
-        this.context.fillStyle = this.colorPickerLink.currentColor;
+        // this.context.fillStyle = this.colorPickerLink.currentColor;
+        this.context.fillStyle = this.choiceColor(e.which);
         this.drawPrimitive(x, y);
       } else if (tool === 'fill') {
         // this.paintBucket.floodFill(x, y, [255, 0, 0, 255]);
@@ -419,7 +435,10 @@ class DrawView extends AnimationView {
         // eslint-disable-next-line array-callback-return
         // eslint-disable-next-line arrow-parens
         // eslint-disable-next-line radix
-        const color = this.colorPickerLink.currentColor.match(/\d+/g).map(elem => parseInt(elem));
+        // eslint-disable-next-line max-len
+        // const color = this.colorPickerLink.currentColor.match(/\d+/g).map(elem => parseInt(elem));
+        // eslint-disable-next-line radix
+        const color = this.choiceColor(e.which).match(/\d+/g).map(elem => parseInt(elem));
         // color[3] = 255;
         console.log(color);
         this.paintBucket.floodFill(x, y, color);
@@ -451,7 +470,8 @@ class DrawView extends AnimationView {
           const {
             xStart, yStart, xStop, yStop,
           } = this;
-          this.context.fillStyle = this.colorPickerLink.currentColor;
+          // this.context.fillStyle = this.colorPickerLink.currentColor;
+          this.context.fillStyle = this.choiceColor(e.button);
           this.arrayPrimitiveCoordToClear = this.lineBresenham(xStart, yStart, xStop, yStop);
           this.arrayPrimitiveCoordToClear = [];
         }
@@ -468,7 +488,8 @@ class DrawView extends AnimationView {
           radius = Math.min(radius, threshold);
           threshold = Math.min(this.canvasResolution - yStart, yStart);
           radius = Math.min(radius, threshold);
-          this.context.fillStyle = this.colorPickerLink.currentColor;
+          // this.context.fillStyle = this.colorPickerLink.currentColor;
+          this.context.fillStyle = this.choiceColor(e.button);
           this.arrayPrimitiveCoordToClear = this.circleBresenham(xStart, yStart, radius);
           this.arrayPrimitiveCoordToClear = [];
         }
@@ -480,7 +501,8 @@ class DrawView extends AnimationView {
           } = this;
           const width = xStop - xStart;
           const height = yStop - yStart;
-          this.context.fillStyle = this.colorPickerLink.currentColor;
+          // this.context.fillStyle = this.colorPickerLink.currentColor;
+          this.context.fillStyle = this.choiceColor(e.button);
           this.arrayPrimitiveCoordToClear = this.square(xStart, yStart, width, height);
           this.arrayPrimitiveCoordToClear = [];
         }

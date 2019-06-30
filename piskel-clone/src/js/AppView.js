@@ -1,11 +1,13 @@
 import '../css/style.css';
-import ColorPickerView from './ColorPickerView';
+// import ColorPickerView from './ColorPickerView';
 import FrameBar from './FrameBar';
 import { AnimationView, DrawView } from './CanvasView';
 import PenUnit from './PenUnit';
 import CanvasControlPanel from './CanvasControlPanel';
 import AnimationControlPanel from './AnimationControlPanel';
 import Tools from './Tools';
+// import img from '../img/palette120_120.jpg';
+import ColorChoicer from './ColorChoicer';
 
 class AppView {
   constructor() {
@@ -22,6 +24,7 @@ class AppView {
     this.animationControlPanel = '';
     this.tools = '';
     this.frameBar = '';
+    this.colorChoicer = '';
     this.linkAppView = this;
   }
 
@@ -38,16 +41,23 @@ class AppView {
     this.tools.init(this.toolSection);
     this.tools.addListeners();
     // color-picker-tool
-    const colorPicker = new ColorPickerView(3, 'button');
-    colorPicker.init(this.toolSection);
-    colorPicker.addListeners();
+    // const colorPicker = new ColorPickerView(3, 'button');
+    // colorPicker.init(this.toolSection);
+    // colorPicker.addListeners();
+
+    this.colorChoicer = new ColorChoicer(this);
+    this.colorChoicer.init(this.toolSection);
+    this.colorChoicer.addListeners();
+
+    // --------
     // frame-section
     this.frameSection.classList.add('frame-section');
     this.frameBar = new FrameBar(this);
     this.frameBar.init(this.frameSection);
     // draw-section
     this.drawSection.classList.add('draw-section');
-    this.drawViewer = new DrawView(this, colorPicker, 512, 512);
+    // this.drawViewer = new DrawView(this, colorPicker, 512, 512);
+    this.drawViewer = new DrawView(this, 512, 512);
     this.drawViewer.init(this.drawSection);
     this.drawViewer.addListeners();
     this.canvasControlPanel = new CanvasControlPanel(this);

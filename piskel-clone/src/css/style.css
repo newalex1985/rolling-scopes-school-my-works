@@ -313,3 +313,21 @@
 .file-button:hover {
   opacity: 0.8;
 }
+
+/* temp */
+.color-choicer {
+  width: 120px;
+  height: 120px;
+  border: 1px solid;
+}
+
+.result-color-choicer {
+  box-sizing: border-box;
+  border: 1px solid;
+  width: 30px;
+  height: 30px;
+}
+
+.result-color-choicer-active {
+  border: 2px solid chocolate;
+}
