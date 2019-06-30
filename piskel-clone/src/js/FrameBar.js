@@ -103,18 +103,12 @@ class FrameBar {
     });
     frames.forEach((elem) => {
       const frameContent = elem;
-      // this.drawViewLink.draw(frameContent);
       const frame = new Frame(frameContent);
       frame.add(this.framesArea, this.frames.length + 1);
       frame.fillContent(frameContent);
       this.frames.push(frameContent);
-      // this.drawViewLink.indexCurrentFrame = this.frames.length - 1;
-      // this.makeFrameActive(this.drawViewLink.indexCurrentFrame);
-      // this.drawViewLink.draw(frameContent);
-      // this.commonFrameClickHandler(this.drawViewLink.indexCurrentFrame);
     });
     this.drawViewLink.indexCurrentFrame = this.frames.length - 1;
-    this.commonFrameClickHandler(this.drawViewLink.indexCurrentFrame);
     this.commonFrameClickHandler(this.drawViewLink.indexCurrentFrame);
   }
 
